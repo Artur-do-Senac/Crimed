@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Termo de Abertura do Programa Tele-Saúde Expandido (PTSE-001) — objetivos, escopo, entregáveis, marcos, riscos e critérios de sucesso."
+    />
+    <meta name="theme-color" content="#208049" />
+    <title>O Projeto · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+  </head>
+
+  <body data-page="sobre">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <div id="scroll-progress"></div>
+
+    <div class="a11y-bar">
+      <div class="a11y-inner">
+        <span class="a11y-gov">
+          <i data-ico="building"></i>
+          Portal oficial da Prefeitura Municipal de Criciúma · Secretaria de Saúde
+        </span>
+        <div class="a11y-tools">
+          <button class="a11y-btn" data-a11y="fonte-menos">A&minus;</button>
+          <button class="a11y-btn" data-a11y="fonte-mais">A+</button>
+          <button class="a11y-btn" data-a11y="contraste">
+            <i data-ico="contrast"></i> Contraste
+          </button>
+          <button class="a11y-btn" data-a11y="libras">
+            <i data-ico="accessibility"></i> Libras
+          </button>
+          <span class="a11y-sep"></span>
+          <button class="a11y-btn" data-a11y="tema">
+            <i data-ico="moon"></i><span class="a11y-tema-label">Escuro</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="index.html">
+          <span class="brand-mark"><i data-ico="logo"></i></span>
+          <span class="brand-text">CRIMED<small>Tele-Saúde Criciúma</small></span>
+        </a>
+        <nav class="nav-links" aria-label="Navegação principal">
+          <a href="index.html">Início</a>
+          <a href="#escopo">Escopo</a>
+          <a href="#entregaveis">Entregáveis</a>
+          <a href="#cronograma">Cronograma</a>
+          <a href="#riscos">Riscos</a>
+          <a href="#tecnologia">Tecnologia</a>
+        </nav>
+        <div class="nav-actions">
+          <span id="voltar-painel"></span>
+          <a href="acesso.html" class="btn btn-primary btn-sm">
+            <i data-ico="log-in"></i> Acessar
+          </a>
+          <button class="nav-toggle" aria-label="Abrir menu"><i data-ico="menu"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="conteudo" class="wrap" style="padding: 2.5rem 0 4rem">
+      <!-- ============================================================ CAPA -->
+      <section class="doc-hero reveal">
+        <span class="badge" style="background: rgba(255, 255, 255, 0.18); color: #fff">
+          <i data-ico="book"></i> Termo de Abertura do Projeto · PMBOK 8ª edição
+        </span>
+        <h1 style="font-size: clamp(1.9rem, 1.3rem + 2vw, 2.9rem); margin-top: 1rem">
+          Programa Tele-Saúde Expandido
+        </h1>
+        <p>
+          Projeto de transformação digital da atenção primária de Criciúma:
+          teleconsultas integradas ao prontuário eletrônico, reduzindo filas,
+          deslocamentos e desigualdade de acesso ao SUS. Este protótipo
+          implementa, tela a tela, os entregáveis previstos no termo de abertura.
+        </p>
+
+        <div class="doc-meta">
+          <div><span>Código</span><strong>PTSE-001</strong></div>
+          <div><span>Versão</span><strong>1.0</strong></div>
+          <div><span>Patrocinador</span><strong>Secretaria de Saúde</strong></div>
+          <div><span>Status</span><strong>Protótipo navegável</strong></div>
+        </div>
+      </section>
+
+      <!-- ====================================================== JUSTIFICATIVA -->
+      <section class="section" style="padding: 3rem 0 2rem">
+        <div class="dash-grid">
+          <div class="col-7 reveal">
+            <span class="eyebrow"><i data-ico="alert-circle"></i> Contexto e justificativa</span>
+            <h2 class="mt-1">O problema que estamos resolvendo</h2>
+            <p class="lead mt-2">
+              As Unidades Básicas de Saúde operam acima da capacidade. O
+              resultado é fila longa, demora no agendamento e histórico clínico
+              fragmentado — especialmente para quem mora longe do centro.
+            </p>
+            <p class="muted mt-2">
+              Em Criciúma, o problema tem um recorte geográfico claro: bairros
+              como Rio Maina, Quarta Linha e Mina do Mato ficam a vários
+              quilômetros das unidades com especialistas. Para uma consulta de
+              retorno de dez minutos, o paciente gasta meio dia de transporte.
+            </p>
+
+            <div class="auto-grid mt-4" style="--min: 160px; --gap: 1rem">
+              <div class="card">
+                <div class="kpi-label">Antes do programa</div>
+                <div class="kpi-value" style="font-size: var(--t-2xl); color: var(--danger)">21 dias</div>
+                <div class="small muted">espera média por consulta</div>
+              </div>
+              <div class="card">
+                <div class="kpi-label">Depois do programa</div>
+                <div class="kpi-value" style="font-size: var(--t-2xl); color: var(--brand)">7 dias</div>
+                <div class="small muted">espera média por consulta</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-5 reveal reveal-right">
+            <div class="card card-pad-lg" style="height: 100%">
+              <div class="card-head">
+                <h3><i data-ico="target"></i> Benefícios esperados</h3>
+              </div>
+              <div class="stack" style="--gap: 1rem">
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-brand"><i data-ico="users"></i></div>
+                  <div>
+                    <strong class="small">Redução das filas</strong>
+                    <p class="tiny muted">Menos deslocamento até a unidade física.</p>
+                  </div>
+                </div>
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-accent"><i data-ico="clock"></i></div>
+                  <div>
+                    <strong class="small">Melhor gestão do tempo médico</strong>
+                    <p class="tiny muted">Prontuário aberto junto da consulta.</p>
+                  </div>
+                </div>
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-warn"><i data-ico="file-medical"></i></div>
+                  <div>
+                    <strong class="small">Histórico centralizado</strong>
+                    <p class="tiny muted">Prontuário eletrônico único na rede.</p>
+                  </div>
+                </div>
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-brand"><i data-ico="accessibility"></i></div>
+                  <div>
+                    <strong class="small">Atendimento inclusivo</strong>
+                    <p class="tiny muted">Interface acessível e humanizada.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ ESCOPO -->
+      <section id="escopo" class="section" style="padding: 2rem 0">
+        <div class="section-head reveal">
+          <span class="eyebrow"><i data-ico="layers"></i> Seção 5</span>
+          <h2>Escopo de alto nível</h2>
+        </div>
+
+        <div class="dash-grid">
+          <div class="col-6 reveal">
+            <div class="card card-pad-lg card-accent" style="height: 100%">
+              <h3 class="mb-3"><i data-ico="check-circle"></i> Incluído no escopo</h3>
+              <ul class="stack" style="--gap: 0.7rem">
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="check" style="color: var(--brand)"></i>
+                  <span class="small">Cadastro e autenticação com perfis de Paciente, Profissional e Administrador.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="check" style="color: var(--brand)"></i>
+                  <span class="small">Agendamento e cancelamento integrados à agenda médica.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="check" style="color: var(--brand)"></i>
+                  <span class="small">Sala virtual segura com vídeo, chat e criptografia.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="check" style="color: var(--brand)"></i>
+                  <span class="small">Prontuário eletrônico com anamnese, diagnóstico e exames.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="check" style="color: var(--brand)"></i>
+                  <span class="small">Notificações, lembretes e avaliação do atendimento.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="check" style="color: var(--brand)"></i>
+                  <span class="small">Painel administrativo com relatórios de produtividade.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-6 reveal">
+            <div class="card card-pad-lg" style="height: 100%; border-color: var(--danger)">
+              <h3 class="mb-3"><i data-ico="x-circle" style="color: var(--danger)"></i> Fora do escopo</h3>
+              <ul class="stack" style="--gap: 0.7rem">
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="close" style="color: var(--danger)"></i>
+                  <span class="small">Faturamento, cobrança ou pagamentos — o foco é o sistema público.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="close" style="color: var(--danger)"></i>
+                  <span class="small">Atendimentos de alta complexidade ou emergências presenciais.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="close" style="color: var(--danger)"></i>
+                  <span class="small">Fornecimento de equipamentos (celulares, webcams) aos pacientes.</span>
+                </li>
+                <li class="row" style="align-items: flex-start">
+                  <i data-ico="close" style="color: var(--danger)"></i>
+                  <span class="small">Integração com farmácias privadas para compra de medicamentos.</span>
+                </li>
+              </ul>
+              <div class="resumo-box mt-3" style="border-color: var(--danger); background: var(--danger-soft)">
+                <p class="tiny">
+                  <strong>Importante:</strong> casos de urgência e emergência
+                  continuam sendo atendidos presencialmente. A triagem digital
+                  identifica esses casos e orienta a procurar o SAMU (192) ou a
+                  emergência mais próxima.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== ENTREGÁVEIS -->
+      <section id="entregaveis" class="section" style="padding: 2rem 0">
+        <div class="section-head reveal">
+          <span class="eyebrow"><i data-ico="grid"></i> Seção 6</span>
+          <h2>Entregáveis — e onde vê-los funcionando</h2>
+          <p>
+            Cada entregável previsto no termo de abertura corresponde a uma tela
+            navegável deste protótipo. Clique para abrir.
+          </p>
+        </div>
+
+        <div class="auto-grid reveal" style="--min: 300px" id="entregaveis-grid"></div>
+      </section>
+
+      <!-- ======================================================= CRONOGRAMA -->
+      <section id="cronograma" class="section" style="padding: 2rem 0">
+        <div class="dash-grid">
+          <div class="col-6 reveal">
+            <span class="eyebrow"><i data-ico="calendar"></i> Seção 7</span>
+            <h2 class="mt-1 mb-3">Marcos do projeto</h2>
+            <div class="card card-pad-lg">
+              <div class="timeline" id="marcos"></div>
+            </div>
+          </div>
+
+          <div class="col-6 reveal">
+            <span class="eyebrow"><i data-ico="credit-card"></i> Seção 8</span>
+            <h2 class="mt-1 mb-3">Orçamento preliminar</h2>
+            <div class="card card-pad-lg">
+              <div id="grafico-orcamento"></div>
+              <hr class="divider" />
+              <div class="row-between">
+                <span class="bold">Total preliminar</span>
+                <span class="kpi-value" style="font-size: var(--t-xl); color: var(--brand)">
+                  R$ 313.500,00
+                </span>
+              </div>
+              <p class="tiny muted mt-2">
+                Valores fictícios, definidos para fins didáticos conforme o
+                termo de abertura.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== RISCOS -->
+      <section id="riscos" class="section" style="padding: 2rem 0">
+        <div class="section-head reveal">
+          <span class="eyebrow"><i data-ico="alert-triangle"></i> Seção 11</span>
+          <h2>Riscos e o que o protótipo já faz a respeito</h2>
+          <p>
+            Todo risco identificado no termo de abertura tem uma resposta
+            concreta implementada na aplicação.
+          </p>
+        </div>
+
+        <div class="card card-flush reveal">
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Risco</th>
+                  <th>Nível</th>
+                  <th>Resposta implementada no protótipo</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-riscos"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== TECNOLOGIA -->
+      <section id="tecnologia" class="section" style="padding: 2rem 0">
+        <div class="section-head reveal">
+          <span class="eyebrow"><i data-ico="zap"></i> Decisões técnicas</span>
+          <h2>Como este protótipo foi construído</h2>
+          <p>
+            HTML, CSS e JavaScript puros — sem framework, sem build, sem
+            servidor. Publicado no GitHub Pages.
+          </p>
+        </div>
+
+        <div class="auto-grid reveal" style="--min: 250px">
+          <div class="card card-pad-lg hover-lift">
+            <div class="icon-bubble bub-brand"><i data-ico="video"></i></div>
+            <h4 class="mt-2">Vídeo real no navegador</h4>
+            <p class="small muted">
+              A sala de teleconsulta usa as APIs <span class="mono">getUserMedia</span>
+              e <span class="mono">getDisplayMedia</span> — câmera, microfone e
+              compartilhamento de tela funcionam de verdade, sem plugin.
+            </p>
+          </div>
+          <div class="card card-pad-lg hover-lift">
+            <div class="icon-bubble bub-accent"><i data-ico="bar-chart"></i></div>
+            <h4 class="mt-2">Gráficos próprios em SVG</h4>
+            <p class="small muted">
+              Nenhuma biblioteca de gráficos. O motor de visualização foi escrito
+              do zero, o que mantém o sistema leve e funcionando sem internet.
+            </p>
+          </div>
+          <div class="card card-pad-lg hover-lift">
+            <div class="icon-bubble bub-warn"><i data-ico="wifi"></i></div>
+            <h4 class="mt-2">Funciona offline (PWA)</h4>
+            <p class="small muted">
+              Um Service Worker guarda o sistema em cache. Depois da primeira
+              visita, ele abre mesmo com a internet instável — resposta direta
+              ao risco R3.
+            </p>
+          </div>
+          <div class="card card-pad-lg hover-lift">
+            <div class="icon-bubble bub-brand"><i data-ico="accessibility"></i></div>
+            <h4 class="mt-2">Acessibilidade de verdade</h4>
+            <p class="small muted">
+              Contraste alto, texto ampliável, navegação por teclado, marcos ARIA
+              e integração com o VLibras do gov.br.
+            </p>
+          </div>
+          <div class="card card-pad-lg hover-lift">
+            <div class="icon-bubble bub-accent"><i data-ico="lock"></i></div>
+            <h4 class="mt-2">Dados no próprio dispositivo</h4>
+            <p class="small muted">
+              Tudo é guardado em <span class="mono">localStorage</span>. Nenhuma
+              informação de saúde sai do navegador — o protótipo demonstra o
+              princípio de minimização da LGPD.
+            </p>
+          </div>
+          <div class="card card-pad-lg hover-lift">
+            <div class="icon-bubble bub-warn"><i data-ico="qr"></i></div>
+            <h4 class="mt-2">Receita com QR verificável</h4>
+            <p class="small muted">
+              O QR Code das receitas é gerado de verdade e pode ser lido por
+              qualquer celular, carregando o código de validação da prescrição.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ EQUIPE -->
+      <section class="section" style="padding: 2rem 0 0">
+        <div class="cta-band reveal">
+          <span class="eyebrow" style="color: rgba(255, 255, 255, 0.75)">Equipe do projeto</span>
+          <h2 class="mt-2">Artur · Brendon · Gabriel · Thiago Motta · Welliton</h2>
+          <p>
+            Trabalho acadêmico desenvolvido para a região de Criciúma/SC, com
+            base no Guia PMBOK 8ª edição (PMI, 2025).
+          </p>
+          <div class="cta-actions">
+            <a href="acesso.html" class="btn btn-white btn-lg">
+              <i data-ico="play"></i> Testar o sistema
+            </a>
+            <a href="index.html" class="btn btn-lg btn-outline" style="color: #fff; border-color: rgba(255, 255, 255, 0.5)">
+              <i data-ico="arrow-left"></i> Voltar ao portal
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer-bottom" style="border-top: none">
+          <span>
+            © 2026 Prefeitura Municipal de Criciúma · Secretaria de Saúde —
+            protótipo acadêmico
+          </span>
+          <span>Programa Tele-Saúde Expandido · PTSE-001</span>
+        </div>
+      </div>
+    </footer>
+
+    <div id="toast-container"></div>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+      /* ------------------------------------------------- conteúdo da página */
+      document.addEventListener("DOMContentLoaded", function () {
+        var U = UI.u;
+
+        /* botão de volta ao painel, se houver sessão ativa */
+        var s = DB.sessao();
+        if (s) {
+          document.getElementById("voltar-painel").innerHTML =
+            '<a href="' + (s.home || "dashboard.html") +
+            '" class="btn btn-outline btn-sm nav-desktop-only">' +
+            Icon.svg("grid") + "Meu painel</a>";
+        }
+
+        /* ---------------------------------------------------- entregáveis */
+        var entregaveis = [
+          { id: "E1", t: "Cadastro, login e perfis", d: "Paciente, Profissional e Administrador, cada um com seu painel.", href: "acesso.html", ico: "log-in" },
+          { id: "E2", t: "Agendamento e agenda médica", d: "Wizard de 4 passos com horários reais dos profissionais da rede.", href: "consultas.html", ico: "calendar-plus" },
+          { id: "E3", t: "Sala virtual de teleconsulta", d: "Vídeo, áudio, chat e compartilhamento de tela funcionando.", href: "teleconsulta.html", ico: "video" },
+          { id: "E4", t: "Prontuário eletrônico", d: "Anamnese, diagnóstico, conduta, exames e laudos integrados.", href: "prontuarios.html", ico: "file-medical" },
+          { id: "E5", t: "Sistema de notificações", d: "Central de avisos com lembretes de consulta, exame e receita.", href: "dashboard.html", ico: "bell" },
+          { id: "E6", t: "Avaliação do atendimento", d: "Pesquisa de satisfação ao final de cada teleconsulta.", href: "dashboard.html", ico: "star" },
+          { id: "E7", t: "Painel administrativo", d: "Indicadores, gráficos e relatórios gerenciais exportáveis.", href: "admin.html", ico: "bar-chart" },
+          { id: "E8", t: "Modelagem do banco de dados", d: "Entidades do sistema documentadas na camada de dados do protótipo.", href: "#modelo", ico: "layers" },
+          { id: "E9", t: "Documentação e ajuda", d: "Esta página, a triagem da Cris e as dúvidas frequentes do portal.", href: "index.html#duvidas", ico: "book" },
+        ];
+
+        document.getElementById("entregaveis-grid").innerHTML = entregaveis
+          .map(function (e) {
+            return (
+              '<a class="entrega-card hover-lift" href="' + e.href + '">' +
+              '<span class="entrega-id">' + e.id + "</span>" +
+              "<div><h5>" + U.esc(e.t) + "</h5>" +
+              "<p>" + U.esc(e.d) + "</p>" +
+              '<span class="svc-link">Abrir tela ' + Icon.svg("arrow-right") + "</span></div></a>"
+            );
+          })
+          .join("");
+
+        /* -------------------------------------------------------- marcos */
+        var marcos = [
+          { d: "Agosto/2026", t: "Iniciação autorizada", s: "Termo de abertura aprovado pelo patrocinador.", st: "done" },
+          { d: "Setembro/2026", t: "Requisitos e arquitetura", s: "Escopo detalhado e protótipo navegável — estamos aqui.", st: "now" },
+          { d: "Março/2027", t: "MVP para homologação", s: "Versão funcional com os entregáveis E1 a E7.", st: "future" },
+          { d: "Maio/2027", t: "Homologação concluída", s: "Validação com profissionais e pacientes das UBS piloto.", st: "future" },
+          { d: "Junho/2027", t: "Implantação em produção", s: "Entrada em operação nas unidades participantes.", st: "future" },
+          { d: "Julho/2027", t: "Encerramento", s: "Transferência para a equipe de sustentação da Secretaria.", st: "future" },
+        ];
+        document.getElementById("marcos").innerHTML = marcos
+          .map(function (m) {
+            return (
+              '<div class="timeline-item ' +
+              (m.st === "done" ? "is-done" : m.st === "future" ? "is-future" : "") + '">' +
+              '<div class="timeline-date">' + m.d +
+              (m.st === "now" ? ' <span class="badge badge-brand">atual</span>' : "") + "</div>" +
+              "<h5>" + m.t + "</h5><p class='small muted'>" + m.s + "</p></div>"
+            );
+          })
+          .join("");
+
+        /* ----------------------------------------------------- orçamento */
+        Chart.donut(document.getElementById("grafico-orcamento"), {
+          dados: [
+            { nome: "Desenvolvimento e gestão", valor: 180000 },
+            { nome: "Infraestrutura e ferramentas", valor: 45000 },
+            { nome: "Testes e segurança", valor: 35000 },
+            { nome: "Treinamento e implantação", valor: 25000 },
+            { nome: "Reserva gerencial", valor: 28500 },
+          ],
+          centroValor: "R$ 313,5 mil",
+          centroLabel: "orçamento total",
+        });
+
+        /* --------------------------------------------------------- riscos */
+        var riscos = [
+          { id: "R1", r: "Vazamento de dados médicos", n: "Crítico", resp: "Central de privacidade com consentimentos granulares, trilha de auditoria de acessos e portabilidade dos dados (LGPD art. 18)." },
+          { id: "R2", r: "Baixa inclusão digital", n: "Alto", resp: "Barra de acessibilidade, alto contraste, texto ampliável, VLibras e telessaúde assistida na própria UBS." },
+          { id: "R3", r: "Instabilidade técnica", n: "Alto", resp: "Service Worker com cache offline, modo somente áudio e teste de câmera/microfone antes de entrar na sala." },
+          { id: "R4", r: "Resistência cultural", n: "Médio", resp: "Registro clínico ao lado do vídeo, com histórico do paciente já aberto — menos cliques que o papel." },
+          { id: "R5", r: "Atrasos na infraestrutura", n: "Médio", resp: "Arquitetura estática publicável em qualquer hospedagem, sem dependência de servidor de aplicação." },
+        ];
+        document.getElementById("tabela-riscos").innerHTML = riscos
+          .map(function (x) {
+            return (
+              "<tr><td class='td-strong'>" + x.id + "</td>" +
+              "<td class='td-strong'>" + U.esc(x.r) + "</td>" +
+              "<td><span class='risco-badge risco-" + x.n + "'>" + x.n + "</span></td>" +
+              "<td class='small muted'>" + U.esc(x.resp) + "</td></tr>"
+            );
+          })
+          .join("");
+
+        UI.reveal();
+      });
+    </script>
+  </body>
+</html>

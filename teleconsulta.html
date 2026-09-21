@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#013D00" />
+    <title>Sala de Teleconsulta · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+  </head>
+
+  <body data-page="teleconsulta" class="call-page">
+    <!-- ============================================================= TOPO -->
+    <header class="call-top">
+      <a class="brand brand-light" href="dashboard.html" id="voltar-link">
+        <span class="brand-mark"><i data-ico="logo"></i></span>
+        <span class="brand-text">CRIMED<small>Sala de teleconsulta</small></span>
+      </a>
+
+      <div class="row" style="gap: 0.75rem; flex-wrap: wrap">
+        <span class="call-status" id="call-status">
+          <span class="dot dot-live"></span>
+          <span id="call-status-texto">Aguardando conexão</span>
+          <span class="call-timer" id="call-timer">00:00</span>
+        </span>
+        <span class="call-secure">
+          <i data-ico="lock"></i> Criptografada ponta a ponta
+        </span>
+      </div>
+    </header>
+
+    <!-- ============================================================ CORPO -->
+    <div class="call-body">
+      <!-- ---------------------------------------------------------- PALCO -->
+      <section class="call-stage" id="call-stage">
+        <!-- tela de preparação -->
+        <div class="call-prep" id="call-prep">
+          <div>
+            <span class="badge badge-brand mb-2" id="prep-consulta-badge">
+              <i data-ico="calendar-check"></i> Carregando consulta…
+            </span>
+            <h2 id="prep-titulo">Vamos preparar sua consulta</h2>
+            <p id="prep-sub">
+              Antes de entrar, vamos verificar se sua câmera e seu microfone
+              estão funcionando. Nada é gravado.
+            </p>
+
+            <div class="prep-video-box">
+              <video id="prep-video" autoplay playsinline muted></video>
+              <div class="call-self-off" id="prep-video-off">
+                <i data-ico="video-off"></i>
+                <span>Câmera desligada</span>
+              </div>
+            </div>
+
+            <div class="call-prep-check">
+              <span class="prep-item is-bad" id="chk-camera">
+                <i data-ico="video"></i> Câmera
+              </span>
+              <span class="prep-item is-bad" id="chk-mic">
+                <i data-ico="mic"></i> Microfone
+              </span>
+              <span class="prep-item" id="chk-rede">
+                <i data-ico="wifi"></i> Conexão estável
+              </span>
+            </div>
+
+            <div class="row" style="justify-content: center; gap: 0.6rem; flex-wrap: wrap">
+              <button class="btn btn-white" id="btn-testar">
+                <i data-ico="play"></i> Testar câmera e microfone
+              </button>
+              <button class="btn btn-primary btn-lg pulse" id="btn-entrar">
+                <i data-ico="video"></i> Entrar na consulta
+              </button>
+            </div>
+            <p class="tiny mt-3" style="color: rgba(255, 255, 255, 0.45)">
+              Sem câmera? Você pode entrar apenas com áudio — a consulta
+              funciona do mesmo jeito.
+            </p>
+          </div>
+        </div>
+
+        <!-- chamada em andamento -->
+        <span class="call-badge-live hidden" id="badge-live">
+          <span class="dot dot-live"></span> Ao vivo · não gravado
+        </span>
+
+        <div class="call-remote hidden" id="call-remote">
+          <div>
+            <div class="call-remote-avatar" id="remote-iniciais">—</div>
+            <h3 id="remote-nome">—</h3>
+            <p id="remote-sub">—</p>
+            <div class="call-wave" id="remote-wave">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <p class="tiny mt-2" style="color: rgba(255, 255, 255, 0.4)">
+              Vídeo do profissional simulado neste protótipo
+            </p>
+          </div>
+        </div>
+
+        <div class="call-self hidden" id="call-self">
+          <video id="self-video" autoplay playsinline muted></video>
+          <div class="call-self-off" id="self-off">
+            <i data-ico="video-off"></i>
+            <span>Câmera desligada</span>
+          </div>
+          <span class="call-self-tag" id="self-tag">Você</span>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------- PAINEL LATERAL -->
+      <aside class="call-side">
+        <div class="call-side-tabs">
+          <button class="call-side-tab is-active" data-cpane="chat">
+            <i data-ico="message"></i> Chat
+          </button>
+          <button class="call-side-tab" data-cpane="info">
+            <i data-ico="clipboard"></i> Dados
+          </button>
+          <button class="call-side-tab" data-cpane="notas" id="tab-notas">
+            <i data-ico="edit"></i> Registro
+          </button>
+        </div>
+
+        <!-- chat -->
+        <div class="call-pane is-active" data-cpane="chat">
+          <div class="call-pane-body" id="chat-body"></div>
+          <form class="chat-compose" id="chat-form">
+            <input
+              type="text"
+              id="chat-input"
+              placeholder="Escreva uma mensagem…"
+              autocomplete="off"
+              aria-label="Mensagem"
+            />
+            <button type="submit" aria-label="Enviar"><i data-ico="send"></i></button>
+          </form>
+        </div>
+
+        <!-- dados -->
+        <div class="call-pane" data-cpane="info">
+          <div class="call-pane-body" id="info-body"></div>
+        </div>
+
+        <!-- registro clínico -->
+        <div class="call-pane" data-cpane="notas">
+          <div class="call-pane-body">
+            <div id="notas-header"></div>
+            <textarea
+              class="call-note"
+              id="nota-anamnese"
+              placeholder="Anamnese — queixa principal, história da doença atual…"
+            ></textarea>
+            <textarea
+              class="call-note mt-2"
+              id="nota-avaliacao"
+              placeholder="Avaliação e hipótese diagnóstica…"
+            ></textarea>
+            <textarea
+              class="call-note mt-2"
+              id="nota-conduta"
+              placeholder="Conduta, prescrição e orientações…"
+            ></textarea>
+            <button class="btn btn-primary btn-block mt-3" id="btn-salvar-nota">
+              <i data-ico="check"></i> Salvar no prontuário
+            </button>
+            <p class="tiny mt-2" style="color: rgba(255, 255, 255, 0.4)">
+              O registro é assinado eletronicamente e fica disponível ao
+              paciente imediatamente após o encerramento.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ========================================================= CONTROLES -->
+    <div class="call-controls hidden" id="call-controls">
+      <button class="call-btn" id="ctl-mic" data-tip="Microfone"><i data-ico="mic"></i></button>
+      <button class="call-btn" id="ctl-cam" data-tip="Câmera"><i data-ico="video"></i></button>
+      <button class="call-btn" id="ctl-tela" data-tip="Compartilhar tela"><i data-ico="screen-share"></i></button>
+      <button class="call-btn" id="ctl-chat" data-tip="Chat"><i data-ico="message"></i></button>
+      <button class="call-btn call-btn-end" id="ctl-sair" data-tip="Encerrar">
+        <i data-ico="phone-off"></i>
+      </button>
+    </div>
+
+    <!-- ================================================= MODAL DE ENCERRAMENTO -->
+    <div class="modal" id="modal-fim">
+      <div class="modal-box">
+        <div class="modal-head center">
+          <div class="icon-bubble icon-bubble-lg bub-solid" style="margin: 0 auto 1rem">
+            <i data-ico="check"></i>
+          </div>
+          <h3 style="justify-content: center">Teleconsulta encerrada</h3>
+          <p id="fim-resumo"></p>
+        </div>
+        <div id="fim-corpo"></div>
+        <div class="modal-foot" style="justify-content: center">
+          <a class="btn btn-outline" href="prontuarios.html" id="fim-prontuario">
+            <i data-ico="file-medical"></i> Ver prontuário
+          </a>
+          <button class="btn btn-primary" id="fim-avaliar">
+            <i data-ico="star"></i> Avaliar atendimento
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/teleconsulta.js"></script>
+  </body>
+</html>

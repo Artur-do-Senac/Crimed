@@ -3,86 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minhas Consultas | Tele-Saúde Criciúma</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="theme-color" content="#208049" />
+    <title>Minhas Consultas · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
   </head>
-  <body>
-    <div class="dashboard-layout">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="logo sidebar-logo">
-          <i class="fa-solid fa-heart-pulse"></i> Tele-Saúde
-        </div>
-        <nav class="side-nav">
-          <a href="dashboard.html"
-            ><i class="fa-solid fa-house-chimney-medical"></i> Início</a
-          >
-          <a href="#" onclick="openModal('modalAgendamento')"
-            ><i class="fa-regular fa-calendar-plus"></i> Agendar Consulta</a
-          >
-          <a href="consultas.html" class="active"
-            ><i class="fa-solid fa-laptop-medical"></i> Minhas Consultas</a
-          >
-          <a href="prontuarios.html"
-            ><i class="fa-solid fa-file-waveform"></i> Prontuários e Exames</a
-          >
-          <a href="perfil.html"
-            ><i class="fa-regular fa-user"></i> Meu Perfil</a
-          >
-        </nav>
-        <a href="index.html" class="logout-btn"
-          ><i class="fa-solid fa-right-from-bracket"></i> Sair</a
-        >
-      </aside>
 
-      <!-- Main Content -->
-      <main class="main-content">
-        <header class="dash-header">
-          <h2>Minhas Consultas</h2>
-          <div class="user-actions">
-            <div class="user-avatar" id="avatar-iniciais">AS</div>
+  <body data-page="consultas">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="app">
+      <aside data-shell="sidebar"></aside>
+      <div class="sidebar-scrim"></div>
+
+      <div class="app-main">
+        <header data-shell="topbar"></header>
+
+        <main class="app-content" id="conteudo">
+          <div class="dash-grid">
+            <section class="col-12">
+              <div class="card card-pad-lg">
+                <div class="card-head">
+                  <div class="pill-tabs" id="filtros-consulta">
+                    <button class="pill-tab is-active" data-filtro="Todas">Todas</button>
+                    <button class="pill-tab" data-filtro="Confirmada">Agendadas</button>
+                    <button class="pill-tab" data-filtro="Realizada">Realizadas</button>
+                    <button class="pill-tab" data-filtro="Cancelada">Canceladas</button>
+                  </div>
+                  <div class="row" style="gap: 0.5rem">
+                    <div class="input-icon" style="min-width: 200px">
+                      <i data-ico="search"></i>
+                      <input
+                        type="search"
+                        class="input"
+                        id="busca-consulta"
+                        placeholder="Buscar profissional…"
+                        aria-label="Buscar consulta"
+                      />
+                    </div>
+                    <button class="btn btn-primary" data-act="agendar">
+                      <i data-ico="calendar-plus"></i> Agendar
+                    </button>
+                  </div>
+                </div>
+
+                <div id="lista-consultas"></div>
+              </div>
+            </section>
+
+            <section class="col-12">
+              <div class="card card-pad-lg">
+                <div class="card-head">
+                  <h3><i data-ico="calendar"></i> Sua agenda do mês</h3>
+                  <span class="small muted" id="calendario-mes"></span>
+                </div>
+                <div id="calendario"></div>
+              </div>
+            </section>
           </div>
-        </header>
-
-        <div class="dash-grid" style="grid-template-columns: 1fr">
-          <section class="dash-card">
-            <div
-              class="card-header"
-              style="justify-content: flex-start; gap: 20px"
-            >
-              <button
-                class="tab-btn active"
-                onclick="filtrarConsultas('Todas', this)"
-              >
-                Todas
-              </button>
-              <button
-                class="tab-btn"
-                onclick="filtrarConsultas('Confirmada', this)"
-              >
-                Agendadas
-              </button>
-              <button
-                class="tab-btn"
-                onclick="filtrarConsultas('Cancelada', this)"
-              >
-                Canceladas
-              </button>
-            </div>
-
-            <div id="pagina-consultas-container" class="consultas-list">
-              <!-- Renderizado via JS -->
-            </div>
-          </section>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
 
+    <div id="cris-root"></div>
     <div id="toast-container"></div>
-    <script src="script.js"></script>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/paciente.js"></script>
+    <script src="assets/js/assistente.js"></script>
   </body>
 </html>

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#208049" />
+    <title>Painel de Indicadores · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+  </head>
+
+  <body data-page="admin">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="app">
+      <aside data-shell="sidebar"></aside>
+      <div class="sidebar-scrim"></div>
+
+      <div class="app-main">
+        <header data-shell="topbar"></header>
+
+        <main class="app-content" id="conteudo">
+          <!-- =============================================== INDICADORES -->
+          <div class="auto-grid mb-3" style="--min: 215px" id="kpis-admin"></div>
+
+          <div class="dash-grid">
+            <!-- ================================= MIGRAÇÃO DO ATENDIMENTO -->
+            <section class="col-8">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="line-chart"></i> Migração do atendimento</h3>
+                  <div class="seg" id="seg-periodo">
+                    <button class="is-active" data-periodo="9">9 meses</button>
+                    <button data-periodo="6">6 meses</button>
+                    <button data-periodo="3">3 meses</button>
+                  </div>
+                </div>
+                <p class="small muted mb-2">
+                  Teleconsultas substituindo atendimentos presenciais de baixa
+                  complexidade na rede municipal.
+                </p>
+                <div id="grafico-migracao"></div>
+              </div>
+            </section>
+
+            <!-- ============================================== SATISFAÇÃO -->
+            <section class="col-4">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="award"></i> Satisfação</h3>
+                </div>
+                <div id="grafico-satisfacao"></div>
+                <div id="satisfacao-detalhe" class="mt-2"></div>
+              </div>
+            </section>
+
+            <!-- ============================================ ESPECIALIDADES -->
+            <section class="col-5">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="pie-chart"></i> Demanda por especialidade</h3>
+                </div>
+                <div id="grafico-especialidades"></div>
+              </div>
+            </section>
+
+            <!-- ================================================== ESPERA -->
+            <section class="col-7">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="hourglass"></i> Tempo médio de espera</h3>
+                  <span class="badge badge-ok">
+                    <i data-ico="trending-down"></i> Meta do projeto: até 10 dias
+                  </span>
+                </div>
+                <p class="small muted mb-2">
+                  Dias entre a solicitação e a realização da consulta.
+                </p>
+                <div id="grafico-espera"></div>
+              </div>
+            </section>
+
+            <!-- ================================================ UNIDADES -->
+            <section class="col-6">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="building"></i> Teleconsultas por unidade</h3>
+                </div>
+                <div id="grafico-unidades"></div>
+              </div>
+            </section>
+
+            <!-- ========================================= CRITÉRIOS DE SUCESSO -->
+            <section class="col-6">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="target"></i> Critérios de sucesso</h3>
+                  <span class="small muted">Termo de abertura · seção 15</span>
+                </div>
+                <div id="metas"></div>
+              </div>
+            </section>
+
+            <!-- ============================================ TABELA GERAL -->
+            <section class="col-12">
+              <div class="card card-pad-lg">
+                <div class="card-head">
+                  <h3><i data-ico="list"></i> Operação por unidade</h3>
+                  <div class="row" style="gap: 0.5rem">
+                    <button class="btn btn-outline btn-sm" id="btn-csv">
+                      <i data-ico="download"></i> Exportar CSV
+                    </button>
+                    <button class="btn btn-outline btn-sm" id="btn-relatorio">
+                      <i data-ico="print"></i> Relatório gerencial
+                    </button>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Unidade</th>
+                        <th>Bairro</th>
+                        <th>Equipes</th>
+                        <th>Teleconsultas</th>
+                        <th>Absenteísmo</th>
+                        <th>Satisfação</th>
+                        <th>Situação</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabela-unidades"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/gestao.js"></script>
+  </body>
+</html>

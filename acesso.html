@@ -3,110 +3,252 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Acesso | Tele-Saúde Criciúma</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="theme-color" content="#208049" />
+    <title>Acessar o sistema · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
   </head>
-  <body class="auth-body">
-    <div class="auth-wrapper">
-      <div class="auth-panel">
-        <div class="auth-image">
-          <div class="auth-image-overlay">
-            <h2>Tele-Saúde Criciúma</h2>
-            <p>
-              Seu prontuário, suas consultas e sua saúde a um clique de
-              distância.
-            </p>
+
+  <body data-page="acesso">
+    <div class="auth-page">
+      <!-- ========================================================== LATERAL -->
+      <aside class="auth-aside">
+        <a class="brand brand-light" href="index.html">
+          <span class="brand-mark"><i data-ico="logo"></i></span>
+          <span class="brand-text">CRIMED<small>Tele-Saúde Criciúma</small></span>
+        </a>
+
+        <div>
+          <h2>Sua saúde, sem sair de casa.</h2>
+          <p>
+            Acesse o portal da rede municipal de saúde de Criciúma para agendar
+            teleconsultas, consultar seu prontuário e receber receitas digitais.
+          </p>
+
+          <div class="auth-features">
+            <div class="auth-feature">
+              <div class="icon-bubble"><i data-ico="video"></i></div>
+              <div>
+                <strong>Teleconsulta por vídeo</strong>
+                <span>Com profissionais da própria rede municipal</span>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="icon-bubble"><i data-ico="file-medical"></i></div>
+              <div>
+                <strong>Prontuário sempre com você</strong>
+                <span>Histórico, exames e receitas em um só lugar</span>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="icon-bubble"><i data-ico="shield"></i></div>
+              <div>
+                <strong>Dados protegidos</strong>
+                <span>Criptografia e conformidade com a LGPD</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="auth-content">
-          <a href="index.html" class="back-link"
-            ><i class="fa-solid fa-arrow-left"></i> Voltar</a
-          >
-          <div class="auth-header">
-            <div class="auth-tabs">
-              <button class="tab-btn active" onclick="switchTab('login')">
-                Login
-              </button>
-              <button class="tab-btn" onclick="switchTab('cadastro')">
-                Cadastro
-              </button>
-            </div>
+        <div class="auth-foot-note">
+          <i data-ico="building"></i>
+          Prefeitura Municipal de Criciúma · Secretaria de Saúde
+        </div>
+      </aside>
+
+      <!-- ========================================================= FORMULÁRIO -->
+      <main class="auth-main">
+        <div class="auth-box">
+          <a class="brand" href="index.html" style="margin-bottom: 1.5rem">
+            <span class="brand-mark"><i data-ico="logo"></i></span>
+            <span class="brand-text">CRIMED<small>Tele-Saúde Criciúma</small></span>
+          </a>
+
+          <div class="pill-tabs mb-3">
+            <button class="pill-tab is-active" data-aba="login">Entrar</button>
+            <button class="pill-tab" data-aba="cadastro">Criar conta</button>
           </div>
 
-          <form
-            id="form-login"
-            class="auth-form active"
-            onsubmit="
-              event.preventDefault();
-              window.location.href = 'dashboard.html';
-            "
-          >
-            <h2>Bem-vindo de volta!</h2>
-            <p>Acesse seu painel de teleconsultas.</p>
-            <div class="form-group input-icon">
-              <i class="fa-regular fa-envelope"></i>
-              <input type="text" placeholder="E-mail ou CPF" required />
-            </div>
-            <div class="form-group input-icon">
-              <i class="fa-solid fa-lock"></i>
-              <input type="password" placeholder="Sua senha" required />
-            </div>
-            <a href="#" class="forgot-password">Esqueceu a senha?</a>
-            <button type="submit" class="btn-primary w-100 pulse-btn">
-              Entrar no Sistema
-            </button>
-          </form>
+          <!-- ------------------------------------------------------ LOGIN -->
+          <form class="auth-form is-active" id="form-login" novalidate>
+            <h2 style="font-size: var(--t-2xl)">Acessar o sistema</h2>
+            <p class="muted small mb-3">
+              Escolha o perfil que você quer demonstrar e entre.
+            </p>
 
-          <form
-            id="form-cadastro"
-            class="auth-form"
-            onsubmit="
-              event.preventDefault();
-              showToast('Cadastro realizado! Faça login.', 'success');
-              switchTab('login');
-            "
-          >
-            <h2>Crie sua conta</h2>
-            <p>Preencha os dados abaixo para se registrar.</p>
-            <div class="form-row">
-              <div class="form-group half">
-                <input type="text" placeholder="Nome Completo" required />
-              </div>
-              <div class="form-group half">
+            <div class="field-label mb-1">Perfil de acesso</div>
+            <div class="perfil-grid">
+              <button type="button" class="perfil-card is-active" data-papel="paciente">
+                <i data-ico="user"></i>
+                <strong>Paciente</strong>
+              </button>
+              <button type="button" class="perfil-card" data-papel="medico">
+                <i data-ico="stethoscope"></i>
+                <strong>Profissional</strong>
+              </button>
+              <button type="button" class="perfil-card" data-papel="admin">
+                <i data-ico="bar-chart"></i>
+                <strong>Gestor</strong>
+              </button>
+            </div>
+
+            <div class="field">
+              <label for="login-usuario">CPF, Cartão SUS ou usuário</label>
+              <div class="input-icon">
+                <i data-ico="user"></i>
                 <input
                   type="text"
-                  placeholder="CPF (000.000.000-00)"
+                  id="login-usuario"
+                  value="072.418.339-55"
+                  autocomplete="username"
                   required
                 />
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group half">
-                <input type="date" required />
+
+            <div class="field">
+              <label for="login-senha">Senha</label>
+              <div class="input-icon">
+                <i data-ico="lock"></i>
+                <input
+                  type="password"
+                  id="login-senha"
+                  value="demo1234"
+                  autocomplete="current-password"
+                  required
+                />
+                <button type="button" class="toggle-pass" aria-label="Mostrar senha">
+                  <i data-ico="eye"></i>
+                </button>
               </div>
-              <div class="form-group half">
-                <input type="text" placeholder="WhatsApp" required />
+            </div>
+
+            <div class="row-between mb-3">
+              <label class="check">
+                <input type="checkbox" checked />
+                <span>Manter conectado</span>
+              </label>
+              <a href="#" class="small bold" style="color: var(--brand)">
+                Esqueci minha senha
+              </a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              <i data-ico="log-in"></i> Entrar como <span id="demo-nome">Artur Seixas Pedro</span>
+            </button>
+
+            <div class="demo-hint">
+              <strong>Modo demonstração</strong>
+              Os três perfis já vêm preenchidos — usuário sugerido e senha
+              <code>demo1234</code>. Qualquer valor é aceito: este é um
+              protótipo acadêmico e nenhum dado sai do seu navegador.
+            </div>
+
+            <p class="center small muted mt-3">
+              <a href="index.html" style="color: var(--brand); font-weight: 700">
+                <i data-ico="arrow-left"></i> Voltar ao portal
+              </a>
+            </p>
+          </form>
+
+          <!-- --------------------------------------------------- CADASTRO -->
+          <form class="auth-form" id="form-cadastro" novalidate>
+            <h2 style="font-size: var(--t-2xl)">Criar minha conta</h2>
+            <p class="muted small mb-3">
+              Cadastro único para toda a rede municipal de saúde.
+            </p>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="c-nome">Nome completo</label>
+                <input type="text" id="c-nome" placeholder="Como no documento" required />
+              </div>
+              <div class="field">
+                <label for="c-cpf">CPF</label>
+                <input type="text" id="c-cpf" data-mask="cpf" placeholder="000.000.000-00" required />
               </div>
             </div>
-            <div class="form-group">
-              <input type="email" placeholder="E-mail" required />
+
+            <div class="field-row">
+              <div class="field">
+                <label for="c-nasc">Data de nascimento</label>
+                <input type="date" id="c-nasc" required />
+              </div>
+              <div class="field">
+                <label for="c-tel">WhatsApp</label>
+                <input type="text" id="c-tel" data-mask="tel" placeholder="(48) 90000-0000" required />
+              </div>
             </div>
-            <div class="form-group">
-              <input type="password" placeholder="Crie uma Senha" required />
+
+            <div class="field">
+              <label for="c-cns">Cartão Nacional de Saúde (CNS)</label>
+              <input type="text" id="c-cns" placeholder="000 0000 0000 0000" />
+              <span class="field-hint">
+                Opcional — se não souber, podemos localizar pelo seu CPF.
+              </span>
             </div>
-            <button type="submit" class="btn-primary w-100">
-              Finalizar Cadastro
+
+            <div class="field">
+              <label for="c-ubs">UBS de referência</label>
+              <select id="c-ubs" required>
+                <option value="">Selecione sua unidade…</option>
+                <option>UBS Centro</option>
+                <option>UBS Próspera</option>
+                <option>UBS Rio Maina</option>
+                <option>UBS Santa Luzia</option>
+                <option>UBS Pinheirinho</option>
+                <option>UBS Metropol</option>
+                <option>UBS Quarta Linha</option>
+                <option>UBS Boa Vista</option>
+                <option>UBS Mina do Mato</option>
+                <option>UBS São Luiz</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="c-senha">Crie uma senha</label>
+              <div class="input-icon">
+                <i data-ico="lock"></i>
+                <input type="password" id="c-senha" placeholder="Mínimo de 8 caracteres" required />
+                <button type="button" class="toggle-pass" aria-label="Mostrar senha">
+                  <i data-ico="eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <label class="check mb-3">
+              <input type="checkbox" required checked />
+              <span>
+                Li e concordo com a
+                <a href="perfil.html" style="color: var(--brand); font-weight: 700">política de privacidade</a>
+                e autorizo o tratamento dos meus dados de saúde para fins de
+                atendimento, conforme a Lei 13.709/2018 (LGPD).
+              </span>
+            </label>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              <i data-ico="user-plus"></i> Finalizar cadastro
             </button>
           </form>
         </div>
-      </div>
+      </main>
     </div>
+
     <div id="toast-container"></div>
-    <script src="script.js"></script>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/app.js"></script>
   </body>
 </html>

@@ -1,0 +1,37 @@
+{
+  "name": "CRIMED · Tele-Saúde Criciúma",
+  "short_name": "CRIMED",
+  "description": "Portal de teleconsultas, prontuário eletrônico e agendamento da rede municipal de saúde de Criciúma/SC.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f7f4",
+  "theme_color": "#208049",
+  "lang": "pt-BR",
+  "categories": ["health", "medical", "government"],
+  "icons": [
+    {
+      "src": "assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Agendar consulta", "url": "./consultas.html?agendar=1" },
+    { "name": "Meu prontuário", "url": "./prontuarios.html" },
+    { "name": "Sala de teleconsulta", "url": "./teleconsulta.html" }
+  ]
+}

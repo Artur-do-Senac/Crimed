@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#208049" />
+    <title>Agenda do Dia · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+  </head>
+
+  <body data-page="medico">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="app">
+      <aside data-shell="sidebar"></aside>
+      <div class="sidebar-scrim"></div>
+
+      <div class="app-main">
+        <header data-shell="topbar"></header>
+
+        <main class="app-content" id="conteudo">
+          <div class="dash-grid">
+            <!-- ============================================== INDICADORES -->
+            <div class="col-12">
+              <div class="auto-grid" style="--min: 210px" id="kpis-medico"></div>
+            </div>
+
+            <!-- ============================================= AGENDA DO DIA -->
+            <section class="col-7">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="calendar-check"></i> Agenda de hoje</h3>
+                  <span class="badge badge-info" id="agenda-data"></span>
+                </div>
+                <div id="agenda-dia"></div>
+              </div>
+            </section>
+
+            <!-- ============================================ FILA DE ESPERA -->
+            <section class="col-5">
+              <div class="card card-pad-lg" style="height: 100%">
+                <div class="card-head">
+                  <h3><i data-ico="users"></i> Fila de espera</h3>
+                  <span class="badge badge-warn" id="fila-contador">0 aguardando</span>
+                </div>
+                <p class="small muted mb-2">
+                  Ordenada por classificação de risco (Protocolo de Manchester
+                  adaptado) e tempo de espera.
+                </p>
+                <div id="fila-espera"></div>
+              </div>
+            </section>
+
+            <!-- ============================================ PRODUTIVIDADE -->
+            <section class="col-7">
+              <div class="card card-pad-lg">
+                <div class="card-head">
+                  <h3><i data-ico="line-chart"></i> Sua produtividade</h3>
+                  <span class="small muted">Últimos 9 meses</span>
+                </div>
+                <div id="grafico-produtividade"></div>
+              </div>
+            </section>
+
+            <!-- ============================================== PENDÊNCIAS -->
+            <section class="col-5">
+              <div class="card card-pad-lg">
+                <div class="card-head">
+                  <h3><i data-ico="inbox"></i> Pendências clínicas</h3>
+                </div>
+                <div id="pendencias"></div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ========================================== MODAL PRONTUÁRIO RÁPIDO -->
+    <div class="modal" id="modal-paciente">
+      <div class="modal-box modal-box-lg">
+        <button class="modal-close" data-close-modal><i data-ico="close"></i></button>
+        <div class="modal-head">
+          <h3><i data-ico="user"></i> <span id="pac-nome">Paciente</span></h3>
+          <p id="pac-sub"></p>
+        </div>
+        <div id="pac-corpo"></div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost" data-close-modal>Fechar</button>
+          <button class="btn btn-primary" id="pac-atender">
+            <i data-ico="video"></i> Iniciar atendimento
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/gestao.js"></script>
+  </body>
+</html>

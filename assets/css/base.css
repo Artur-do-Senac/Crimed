@@ -1,0 +1,734 @@
+/* ============================================================================
+   CRIMED · Tele-Saúde Criciúma
+   base.css — Reset, design tokens, tipografia, utilitários e animações
+
+   Paleta institucional extraída do portal oficial da Prefeitura Municipal
+   de Criciúma (criciuma.sc.gov.br): verde #208049 / #013D00, azul #003451,
+   vinho #B13B4E.
+   ========================================================================= */
+
+/* ----------------------------------------------------------------- RESET */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  font-size: var(--root-size, 100%);
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--brand-300);
+  color: var(--green-900);
+}
+
+/* ---------------------------------------------------------------- TOKENS */
+:root {
+  /* — Paleta institucional Criciúma — */
+  --green-900: #013d00;
+  --green-800: #0d5a2c;
+  --green-700: #14663a;
+  --green-600: #208049; /* primária */
+  --green-500: #2e9a5a;
+  --green-400: #4fb173;
+  --green-300: #88c570;
+  --green-200: #b6e0a8;
+  --green-100: #dbf3d7;
+  --green-50: #eef9ec;
+
+  --blue-900: #003451;
+  --blue-700: #0a5478;
+  --blue-500: #2098fb;
+  --blue-300: #74beff;
+  --blue-100: #dcecfb;
+
+  --wine-600: #b13b4e;
+  --wine-500: #c94a5e;
+  --wine-100: #fbe6ea;
+
+  --amber-500: #d98324;
+  --amber-100: #fdf0dd;
+
+  /* — Neutros — */
+  --ink-900: #10231a;
+  --ink-700: #2d4133;
+  --ink-500: #5a6b60;
+  --ink-400: #7e8d84;
+  --ink-300: #a8b3ac;
+  --ink-200: #dde3df;
+  --ink-100: #eef1ef;
+  --ink-50: #f6f8f6;
+  --white: #ffffff;
+
+  /* — Papéis semânticos (tema claro) — */
+  --brand: var(--green-600);
+  --brand-strong: var(--green-800);
+  --brand-soft: var(--green-100);
+  --brand-300: var(--green-300);
+  --accent: var(--blue-500);
+  --accent-deep: var(--blue-900);
+  --danger: var(--wine-600);
+  --danger-soft: var(--wine-100);
+  --warn: var(--amber-500);
+  --warn-soft: var(--amber-100);
+  --ok: var(--green-600);
+  --ok-soft: var(--green-100);
+
+  --bg: #f4f7f4;
+  --bg-alt: var(--white);
+  --surface: var(--white);
+  --surface-2: var(--ink-50);
+  --surface-3: var(--ink-100);
+  --sidebar-bg: linear-gradient(170deg, #01411b 0%, #013d00 55%, #012b12 100%);
+  --text: var(--ink-900);
+  --text-soft: var(--ink-500);
+  --text-mute: var(--ink-400);
+  --line: var(--ink-200);
+  --line-soft: var(--ink-100);
+  --focus-ring: var(--blue-500);
+  --on-brand: #ffffff;
+
+  /* — Sombras — */
+  --sh-xs: 0 1px 2px rgba(1, 61, 0, 0.06);
+  --sh-sm: 0 2px 8px rgba(1, 61, 0, 0.07);
+  --sh-md: 0 8px 24px -8px rgba(1, 61, 0, 0.16), 0 2px 6px rgba(1, 61, 0, 0.05);
+  --sh-lg: 0 20px 48px -18px rgba(1, 61, 0, 0.3), 0 4px 12px rgba(1, 61, 0, 0.06);
+  --sh-xl: 0 32px 70px -24px rgba(1, 61, 0, 0.4);
+  --sh-brand: 0 10px 26px -10px rgba(32, 128, 73, 0.55);
+
+  /* — Raios — */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-full: 999px;
+
+  /* — Escala tipográfica — */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Plus Jakarta Sans", var(--font-sans);
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
+
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-base: 0.9375rem;
+  --t-md: 1rem;
+  --t-lg: 1.125rem;
+  --t-xl: 1.375rem;
+  --t-2xl: 1.75rem;
+  --t-3xl: 2.25rem;
+  --t-4xl: clamp(2.25rem, 1.2rem + 3.2vw, 3.6rem);
+
+  /* — Espaço / layout — */
+  --gut: clamp(1.25rem, 5vw, 5rem);
+  --maxw: 1240px;
+  --sidebar-w: 272px;
+  --header-h: 72px;
+
+  /* — Movimento — */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur: 0.28s;
+}
+
+/* ------------------------------------------------------------ TEMA ESCURO */
+[data-theme="dark"] {
+  --bg: #0b1410;
+  --bg-alt: #101c16;
+  --surface: #13211a;
+  --surface-2: #182a20;
+  --surface-3: #1f3529;
+  --sidebar-bg: linear-gradient(170deg, #0d1f15 0%, #09150f 100%);
+  --text: #e8f1ea;
+  --text-soft: #a6b8ac;
+  --text-mute: #7d8f84;
+  --line: #24382c;
+  --line-soft: #1c2c23;
+  --brand: #46b06e;
+  --brand-strong: #6cc98c;
+  --brand-soft: #16301f;
+  --brand-300: #6cc98c;
+  --accent: #58b4ff;
+  --accent-deep: #9ad2ff;
+  --danger: #e2717f;
+  --danger-soft: #3a1d23;
+  --warn: #e8a34e;
+  --warn-soft: #3a2a15;
+  --ok: #46b06e;
+  --ok-soft: #16301f;
+  --on-brand: #04170c;
+
+  --sh-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sh-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --sh-md: 0 8px 24px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --sh-lg: 0 20px 48px -18px rgba(0, 0, 0, 0.75);
+  --sh-xl: 0 32px 70px -24px rgba(0, 0, 0, 0.85);
+  --sh-brand: 0 10px 26px -12px rgba(70, 176, 110, 0.5);
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------- ALTO CONTRASTE (A11Y) */
+[data-contrast="high"] {
+  --bg: #ffffff;
+  --bg-alt: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #ffffff;
+  --surface-3: #f0f0f0;
+  --sidebar-bg: #000000;
+  --text: #000000;
+  --text-soft: #1a1a1a;
+  --text-mute: #333333;
+  --line: #000000;
+  --line-soft: #555555;
+  --brand: #005f2f;
+  --brand-strong: #003d1e;
+  --brand-soft: #e6f2ea;
+  --danger: #8f0021;
+  --accent: #00407a;
+  --accent-deep: #002b52;
+  --on-brand: #ffffff;
+  --sh-xs: none;
+  --sh-sm: none;
+  --sh-md: 0 0 0 2px #000;
+  --sh-lg: 0 0 0 2px #000;
+  --sh-brand: none;
+}
+
+[data-contrast="high"] .card,
+[data-contrast="high"] .panel,
+[data-contrast="high"] .btn {
+  border: 2px solid var(--line) !important;
+}
+
+/* ---------------------------------------------------------- MOVIMENTO OFF */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-motion="off"] *,
+[data-motion="off"] *::before,
+[data-motion="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ------------------------------------------------------------------- BODY */
+body {
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Durante a troca de tema/contraste todas as transições são desligadas.
+   Sem isso, o Chrome mantém o valor antigo de propriedades em transição que
+   dependem de custom properties — a página só se atualizaria no próximo
+   recálculo, dando a impressão de que o botão não funcionou. */
+[data-trocando] *,
+[data-trocando] *::before,
+[data-trocando] *::after {
+  transition: none !important;
+}
+
+/* ------------------------------------------------------------- TIPOGRAFIA */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.021em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--t-4xl);
+  font-weight: 800;
+}
+h2 {
+  font-size: var(--t-3xl);
+}
+h3 {
+  font-size: var(--t-xl);
+}
+h4 {
+  font-size: var(--t-lg);
+}
+h5 {
+  font-size: var(--t-md);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.lead {
+  font-size: var(--t-lg);
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------ UTILITÁRIOS */
+.wrap {
+  width: min(100% - 2rem, var(--maxw));
+  margin-inline: auto;
+}
+.stack > * + * {
+  margin-top: var(--gap, 1rem);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap, 0.75rem);
+}
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap, 1rem);
+  flex-wrap: wrap;
+}
+.grid {
+  display: grid;
+  gap: var(--gap, 1.25rem);
+}
+.center {
+  text-align: center;
+}
+.w-100 {
+  width: 100%;
+}
+.mt-0 {
+  margin-top: 0;
+}
+.mt-1 {
+  margin-top: 0.5rem;
+}
+.mt-2 {
+  margin-top: 1rem;
+}
+.mt-3 {
+  margin-top: 1.5rem;
+}
+.mt-4 {
+  margin-top: 2rem;
+}
+.mb-1 {
+  margin-bottom: 0.5rem;
+}
+.mb-2 {
+  margin-bottom: 1rem;
+}
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+.muted {
+  color: var(--text-soft);
+}
+.mute-2 {
+  color: var(--text-mute);
+}
+.small {
+  font-size: var(--t-sm);
+}
+.tiny {
+  font-size: var(--t-xs);
+}
+.bold {
+  font-weight: 700;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.hidden {
+  display: none !important;
+}
+.relative {
+  position: relative;
+}
+.flex-1 {
+  flex: 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: -100px;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: var(--brand);
+  color: var(--on-brand);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  font-weight: 700;
+  transition: top 0.2s var(--ease);
+}
+.skip-link:focus {
+  top: 0;
+}
+
+.gradient-text {
+  background: linear-gradient(100deg, var(--brand) 10%, var(--green-300) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 1.5rem 0;
+}
+
+/* ícone SVG padrão — inline-block para acompanhar o texto ao redor
+   (o reset acima deixa svg como block, o que quebraria ícones no meio de frases) */
+.ico {
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.2em;
+}
+.ico-sm {
+  width: 1em;
+  height: 1em;
+}
+.ico-lg {
+  width: 1.75em;
+  height: 1.75em;
+}
+
+/* ---------------------------------------------------------- KEYFRAMES */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(32, 128, 73, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(32, 128, 73, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(32, 128, 73, 0);
+  }
+}
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes shimmer {
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.18);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.14);
+  }
+  56% {
+    transform: scale(1);
+  }
+}
+@keyframes dash-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Animações "de entrada segura" usadas pelos gráficos.
+   Elas declaram apenas o quadro inicial: o estado final é o que já está no
+   style do elemento. Assim, se a animação não chegar a rodar (aba em segundo
+   plano, movimento reduzido), o gráfico aparece completo em vez de vazio.
+   ----------------------------------------------------------------------- */
+@keyframes dash-in {
+  from {
+    stroke-dashoffset: var(--dash, 1200);
+  }
+}
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes grow-w {
+  from {
+    width: 0;
+  }
+}
+@keyframes fade-in-soft {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes blink-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* -------------------------------------------------- REVEAL AO ROLAR A TELA */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal-left {
+  transform: translateX(-36px);
+}
+.reveal-right {
+  transform: translateX(36px);
+}
+.reveal-zoom {
+  transform: scale(0.93);
+}
+
+.hover-lift {
+  transition:
+    transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sh-lg);
+}
+
+.float {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------ SCROLLBARS */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-300) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: var(--r-full);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-300);
+  background-clip: content-box;
+}
+
+/* ---------------------------------------------------- BARRA DE PROGRESSO */
+#scroll-progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--brand), var(--green-300));
+  z-index: 999;
+  transition: width 0.1s linear;
+}
+
+/* ------------------------------------------------------- PRELOAD DE TELA */
+.page-fade {
+  animation: fade-in 0.5s var(--ease) both;
+}
+
+/* -------------------------------------------------------------- IMPRESSÃO */
+@media print {
+  .sidebar,
+  .app-topbar,
+  .navbar,
+  .a11y-bar,
+  .fab,
+  #toast-container,
+  .no-print {
+    display: none !important;
+  }
+  .app-main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body {
+    background: #fff;
+  }
+}

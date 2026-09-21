@@ -3,146 +3,814 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tele-Saúde Criciúma</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    <meta
+      name="description"
+      content="CRIMED · Tele-Saúde Criciúma — teleconsultas, prontuário eletrônico e agendamento online na rede municipal de saúde de Criciúma/SC."
     />
+    <meta name="theme-color" content="#208049" />
+    <title>CRIMED · Tele-Saúde Criciúma</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="CRIMED · Tele-Saúde Criciúma" />
+    <meta
+      property="og:description"
+      content="Teleconsultas, prontuário eletrônico e receita digital na rede municipal de saúde de Criciúma/SC."
+    />
+    <meta property="og:image" content="assets/img/criciuma.jpg" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
   </head>
-  <body>
-    <header class="navbar">
-      <div class="logo">
-        <i class="fa-solid fa-heart-pulse"></i> Tele-Saúde <span>Criciúma</span>
+
+  <body data-page="index">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+    <div id="scroll-progress"></div>
+
+    <!-- ===================================================== BARRA GOVERNO -->
+    <div class="a11y-bar">
+      <div class="a11y-inner">
+        <span class="a11y-gov">
+          <i data-ico="building"></i>
+          Portal oficial da Prefeitura Municipal de Criciúma · Secretaria de
+          Saúde
+        </span>
+        <div class="a11y-tools">
+          <button class="a11y-btn" data-a11y="fonte-menos" data-tip="Diminuir texto">
+            A&minus;
+          </button>
+          <button class="a11y-btn" data-a11y="fonte-mais" data-tip="Aumentar texto">
+            A+
+          </button>
+          <button class="a11y-btn" data-a11y="contraste">
+            <i data-ico="contrast"></i> Contraste
+          </button>
+          <button class="a11y-btn" data-a11y="libras">
+            <i data-ico="accessibility"></i> Libras
+          </button>
+          <span class="a11y-sep"></span>
+          <button class="a11y-btn" data-a11y="tema">
+            <i data-ico="moon"></i>
+            <span class="a11y-tema-label">Escuro</span>
+          </button>
+        </div>
       </div>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#inicio">Início</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
-      </nav>
-      <a href="acesso.html" class="btn-nav">Área do Paciente</a>
+    </div>
+
+    <!-- ============================================================ NAVBAR -->
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="index.html">
+          <span class="brand-mark"><i data-ico="logo"></i></span>
+          <span class="brand-text">CRIMED<small>Tele-Saúde Criciúma</small></span>
+        </a>
+
+        <nav class="nav-links" aria-label="Navegação principal">
+          <a href="#servicos">Serviços</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#unidades">Unidades</a>
+          <a href="#acessibilidade">Acessibilidade</a>
+          <a href="#duvidas">Dúvidas</a>
+          <a href="sobre.html">O Projeto</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a href="acesso.html" class="btn btn-outline btn-sm nav-desktop-only">
+            <i data-ico="log-in"></i> Entrar
+          </a>
+          <a href="acesso.html" class="btn btn-primary btn-sm">
+            <i data-ico="calendar-plus"></i> Agendar consulta
+          </a>
+          <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+            <i data-ico="menu"></i>
+          </button>
+        </div>
+      </div>
     </header>
 
-    <section id="inicio" class="hero reveal">
-      <div class="hero-container">
-        <div class="hero-text">
-          <h1>
-            Cuidando de você, <br /><span class="highlight"
-              >de frente para o futuro.</span
-            >
-          </h1>
-          <p>
-            Acesse consultas médicas online com profissionais qualificados, sem
-            sair do conforto da sua casa. Rápido, seguro e humanizado.
-          </p>
-          <div class="hero-buttons">
-            <a href="acesso.html" class="btn-primary">Agendar Teleconsulta</a>
-            <a href="#servicos" class="btn-secondary">Saber Mais</a>
+    <main id="conteudo">
+      <!-- ============================================================ HERO -->
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div class="hero-text">
+            <span class="hero-badge">
+              <b>NOVO</b> Programa Tele-Saúde Expandido · PTSE-001
+            </span>
+
+            <h1>
+              <span class="line"><span>A saúde de Criciúma</span></span>
+              <span class="line"
+                ><span class="gradient-text">a um clique de distância.</span></span
+              >
+            </h1>
+
+            <p class="hero-lead">
+              Consultas por vídeo com profissionais da rede municipal,
+              prontuário eletrônico integrado e receita digital. Sem fila, sem
+              deslocamento — do jeito que o SUS precisa ser.
+            </p>
+
+            <div class="hero-cta">
+              <a href="acesso.html" class="btn btn-primary btn-lg pulse">
+                <i data-ico="video"></i> Agendar teleconsulta
+              </a>
+              <button class="btn btn-outline btn-lg" data-act="abrir-cris">
+                <i data-ico="message-dots"></i> Falar com a Cris
+              </button>
+            </div>
+
+            <div class="hero-trust">
+              <span class="hero-trust-item">
+                <i data-ico="shield"></i> Criptografia ponta a ponta
+              </span>
+              <span class="hero-trust-item">
+                <i data-ico="lock"></i> Conforme a LGPD
+              </span>
+              <span class="hero-trust-item">
+                <i data-ico="accessibility"></i> Acessível e gratuito
+              </span>
+            </div>
           </div>
+
+          <!-- painel ilustrativo -->
+          <div class="hero-visual">
+            <div class="hero-panel">
+              <div class="hero-panel-top">
+                <span class="hero-panel-dots"><i></i><i></i><i></i></span>
+                <span class="small mute-2 mono">crimed.criciuma.sc.gov.br</span>
+              </div>
+
+              <div class="hero-call">
+                <span class="hero-call-live">
+                  <span class="dot dot-live"></span> Ao vivo
+                </span>
+                <div class="hero-call-doc">
+                  <div class="avatar avatar-doc">HB</div>
+                  <strong>Dra. Helena Búrigo</strong>
+                  <span>Clínica Médica · UBS Centro</span>
+                </div>
+                <div class="hero-call-self">Você</div>
+                <div class="hero-call-bar">
+                  <span><i data-ico="mic"></i></span>
+                  <span><i data-ico="video"></i></span>
+                  <span><i data-ico="message"></i></span>
+                  <span><i data-ico="phone-off"></i></span>
+                </div>
+              </div>
+
+              <div class="hero-panel-meta">
+                <span><i data-ico="clock"></i> 12 min de consulta</span>
+                <span><i data-ico="shield"></i> Conexão segura</span>
+              </div>
+            </div>
+
+            <div class="float-card float-card-1">
+              <div class="icon-bubble icon-bubble-sm bub-brand">
+                <i data-ico="calendar-check"></i>
+              </div>
+              <div>
+                <strong>Consulta confirmada</strong>
+                <span>Cardiologia · hoje</span>
+              </div>
+            </div>
+
+            <div class="float-card float-card-2">
+              <div class="icon-bubble icon-bubble-sm bub-warn">
+                <i data-ico="pill"></i>
+              </div>
+              <div>
+                <strong>Receita digital</strong>
+                <span>Válida em todo o país</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== NÚMEROS -->
+      <section class="stats-strip reveal">
+        <div class="wrap stats-grid">
+          <div class="stat">
+            <div class="stat-value" data-count="3741">0</div>
+            <div class="stat-label">Teleconsultas realizadas</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">
+              <span data-count="21">0</span>&rarr;<span data-count="7">0</span>
+            </div>
+            <div class="stat-label">Dias de espera (antes → agora)</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" data-count="93" data-suffix="%">0</div>
+            <div class="stat-label">Satisfação dos pacientes</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" data-count="48250" data-suffix=" km">0</div>
+            <div class="stat-label">Deslocamentos evitados</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= SERVIÇOS -->
+      <section class="section" id="servicos">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="eyebrow"><i data-ico="sparkles"></i> Serviços</span>
+            <h2>Tudo o que a UBS faz, agora também pela tela</h2>
+            <p>
+              Seis módulos integrados que cobrem o ciclo completo do
+              atendimento — do agendamento ao prontuário.
+            </p>
+          </div>
+
+          <div class="auto-grid" style="--min: 290px">
+            <article class="card card-pad-lg svc-card hover-lift reveal" style="--delay: 0ms">
+              <div class="icon-bubble bub-solid"><i data-ico="video"></i></div>
+              <h3>Teleconsulta por vídeo</h3>
+              <p>
+                Sala virtual com áudio e vídeo, chat e compartilhamento de
+                exames. Criptografia ponta a ponta e nenhum dado gravado sem
+                autorização.
+              </p>
+              <a class="svc-link" href="acesso.html">
+                Entrar na sala <i data-ico="arrow-right"></i>
+              </a>
+            </article>
+
+            <article class="card card-pad-lg svc-card hover-lift reveal" style="--delay: 80ms">
+              <div class="icon-bubble bub-brand"><i data-ico="calendar-plus"></i></div>
+              <h3>Agendamento inteligente</h3>
+              <p>
+                Escolha especialidade, profissional e horário em poucos passos.
+                A agenda conversa diretamente com a escala das UBS.
+              </p>
+              <a class="svc-link" href="acesso.html">
+                Agendar agora <i data-ico="arrow-right"></i>
+              </a>
+            </article>
+
+            <article class="card card-pad-lg svc-card hover-lift reveal" style="--delay: 160ms">
+              <div class="icon-bubble bub-accent"><i data-ico="file-medical"></i></div>
+              <h3>Prontuário eletrônico</h3>
+              <p>
+                Histórico clínico, anamnese, condutas e exames reunidos em um
+                só lugar. O profissional vê o caso completo antes de atender.
+              </p>
+              <a class="svc-link" href="acesso.html">
+                Ver prontuário <i data-ico="arrow-right"></i>
+              </a>
+            </article>
+
+            <article class="card card-pad-lg svc-card hover-lift reveal" style="--delay: 0ms">
+              <div class="icon-bubble bub-warn"><i data-ico="pill"></i></div>
+              <h3>Receita digital com QR</h3>
+              <p>
+                Receituário assinado eletronicamente, com código de validação
+                verificável pela farmácia. Nada de papel perdido.
+              </p>
+              <a class="svc-link" href="acesso.html">
+                Minhas receitas <i data-ico="arrow-right"></i>
+              </a>
+            </article>
+
+            <article class="card card-pad-lg svc-card hover-lift reveal" style="--delay: 80ms">
+              <div class="icon-bubble bub-brand"><i data-ico="message-dots"></i></div>
+              <h3>Triagem com a Cris</h3>
+              <p>
+                A assistente virtual faz a classificação de risco, orienta
+                sobre urgências e indica a especialidade certa antes de você
+                agendar.
+              </p>
+              <button class="svc-link" data-act="abrir-cris">
+                Conversar <i data-ico="arrow-right"></i>
+              </button>
+            </article>
+
+            <article class="card card-pad-lg svc-card hover-lift reveal" style="--delay: 160ms">
+              <div class="icon-bubble bub-accent"><i data-ico="bar-chart"></i></div>
+              <h3>Painel de gestão</h3>
+              <p>
+                Indicadores em tempo real para a Secretaria de Saúde: filas,
+                produtividade por unidade, satisfação e absenteísmo.
+              </p>
+              <a class="svc-link" href="acesso.html">
+                Ver indicadores <i data-ico="arrow-right"></i>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== COMO FUNCIONA -->
+      <section class="section section-alt" id="como-funciona">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="eyebrow"><i data-ico="list"></i> Passo a passo</span>
+            <h2>Quatro passos entre o sintoma e o atendimento</h2>
+            <p>
+              Pensado para quem nunca usou telemedicina: sem cadastro
+              complicado, sem aplicativo para instalar.
+            </p>
+          </div>
+
+          <div class="steps reveal">
+            <div class="step">
+              <h4>Faça seu acesso</h4>
+              <p>
+                Entre com CPF ou Cartão SUS. Quem ainda não tem cadastro
+                resolve em menos de um minuto.
+              </p>
+            </div>
+            <div class="step">
+              <h4>Descreva o que sente</h4>
+              <p>
+                A Cris faz a triagem, classifica o risco e sugere a
+                especialidade mais adequada ao seu caso.
+              </p>
+            </div>
+            <div class="step">
+              <h4>Escolha dia e horário</h4>
+              <p>
+                Veja a agenda real dos profissionais da rede e confirme o
+                melhor horário para você.
+              </p>
+            </div>
+            <div class="step">
+              <h4>Entre na sala virtual</h4>
+              <p>
+                No dia, clique em “Entrar”. Ao final, receita e orientações
+                ficam salvas no seu prontuário.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================== DESTAQUE DA SALA -->
+      <section class="section">
+        <div class="wrap">
+          <div class="map-wrap" style="grid-template-columns: 0.95fr 1.05fr">
+            <div class="reveal reveal-left">
+              <span class="eyebrow"><i data-ico="video"></i> Sala de teleconsulta</span>
+              <h2 class="mt-1">Um consultório que cabe no seu celular</h2>
+              <p class="lead mt-2">
+                A sala virtual do CRIMED faz teste de câmera e microfone antes
+                de entrar, mostra o prontuário ao profissional e registra tudo
+                automaticamente ao encerrar.
+              </p>
+
+              <div class="stack mt-3" style="--gap: 0.85rem">
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-brand">
+                    <i data-ico="shield"></i>
+                  </div>
+                  <div>
+                    <strong>Conexão segura</strong>
+                    <p class="small muted">
+                      Nada é gravado sem consentimento explícito do paciente.
+                    </p>
+                  </div>
+                </div>
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-accent">
+                    <i data-ico="clipboard"></i>
+                  </div>
+                  <div>
+                    <strong>Prontuário ao lado do vídeo</strong>
+                    <p class="small muted">
+                      O profissional registra a anamnese sem trocar de tela.
+                    </p>
+                  </div>
+                </div>
+                <div class="row" style="align-items: flex-start">
+                  <div class="icon-bubble icon-bubble-sm bub-warn">
+                    <i data-ico="wifi"></i>
+                  </div>
+                  <div>
+                    <strong>Funciona em conexão lenta</strong>
+                    <p class="small muted">
+                      Modo somente áudio quando a internet oscila.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <a href="acesso.html" class="btn btn-primary mt-4">
+                <i data-ico="play"></i> Ver a sala funcionando
+              </a>
+            </div>
+
+            <div class="reveal reveal-right">
+              <div class="card card-flush" style="overflow: hidden">
+                <div
+                  style="
+                    background: linear-gradient(160deg, #0f2a1c, #071912);
+                    padding: 1.5rem;
+                    aspect-ratio: 16 / 11;
+                    position: relative;
+                    display: grid;
+                    place-items: center;
+                  "
+                >
+                  <span class="call-badge-live" style="top: 0.9rem; left: 0.9rem">
+                    <span class="dot dot-live"></span> Gravação desativada
+                  </span>
+                  <div style="text-align: center; color: #fff">
+                    <div class="call-remote-avatar" style="width: 5.5rem; height: 5.5rem; font-size: 1.5rem">
+                      FS
+                    </div>
+                    <h4 style="color: #fff">Dr. Fernando Silva</h4>
+                    <p class="small" style="color: rgba(255, 255, 255, 0.6)">
+                      Cardiologia · CRM/SC 12.907
+                    </p>
+                    <div class="call-wave">
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                  </div>
+                  <div class="call-self" style="width: 30%">
+                    <div class="call-self-off">
+                      <i data-ico="user"></i>
+                      <span>Sua câmera</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding: 1rem 1.2rem" class="row-between">
+                  <span class="small muted">
+                    <i data-ico="clock"></i> Duração média · 12 min
+                  </span>
+                  <span class="badge badge-ok">
+                    <i data-ico="shield"></i> Criptografada
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= UNIDADES -->
+      <section class="section section-alt" id="unidades">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="eyebrow"><i data-ico="map-pin"></i> Rede municipal</span>
+            <h2>10 unidades conectadas em Criciúma</h2>
+            <p>
+              Passe o mouse sobre os marcadores para ver quantas teleconsultas
+              cada unidade já realizou.
+            </p>
+          </div>
+
+          <div class="map-wrap reveal">
+            <div class="map-canvas" id="mapa-ubs"></div>
+
+            <div>
+              <div class="card card-pad-lg" id="ubs-detalhe">
+                <span class="eyebrow">Unidade em destaque</span>
+                <h3 class="mt-1" id="ubs-nome">UBS Centro</h3>
+                <p class="muted" id="ubs-bairro">Bairro Centro</p>
+
+                <div class="auto-grid mt-3" style="--min: 120px; --gap: 0.75rem">
+                  <div>
+                    <div class="kpi-label">Teleconsultas</div>
+                    <div class="kpi-value" style="font-size: var(--t-2xl)" id="ubs-tele">412</div>
+                  </div>
+                  <div>
+                    <div class="kpi-label">Equipes</div>
+                    <div class="kpi-value" style="font-size: var(--t-2xl)" id="ubs-equipes">6</div>
+                  </div>
+                </div>
+
+                <hr class="divider" />
+                <p class="small muted">
+                  Toda unidade básica conta com um ponto de telessaúde assistido
+                  — para quem não tem celular ou internet em casa, um agente de
+                  saúde acompanha o atendimento na própria UBS.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== ACESSIBILIDADE -->
+      <section class="section" id="acessibilidade">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="eyebrow"><i data-ico="accessibility"></i> Inclusão digital</span>
+            <h2>Feito para quem tem mais dificuldade com tecnologia</h2>
+            <p>
+              O maior risco de um projeto como este não é técnico — é deixar
+              alguém de fora. Por isso a acessibilidade veio antes do resto.
+            </p>
+          </div>
+
+          <div class="auto-grid" style="--min: 250px">
+            <div class="card card-pad-lg card-accent hover-lift reveal">
+              <div class="icon-bubble bub-brand"><i data-ico="type"></i></div>
+              <h4 class="mt-2">Texto ampliável</h4>
+              <p class="small muted">
+                Quatro níveis de ampliação, sem quebrar o layout. Ideal para
+                pacientes idosos e com baixa visão.
+              </p>
+            </div>
+            <div class="card card-pad-lg card-accent hover-lift reveal" style="--delay: 80ms">
+              <div class="icon-bubble bub-accent"><i data-ico="contrast"></i></div>
+              <h4 class="mt-2">Alto contraste</h4>
+              <p class="small muted">
+                Paleta simplificada em preto e branco, com bordas reforçadas e
+                foco visível em todos os controles.
+              </p>
+            </div>
+            <div class="card card-pad-lg card-accent hover-lift reveal" style="--delay: 160ms">
+              <div class="icon-bubble bub-warn"><i data-ico="accessibility"></i></div>
+              <h4 class="mt-2">Tradução em Libras</h4>
+              <p class="small muted">
+                Integração com o VLibras, o tradutor oficial do Governo Federal
+                para a Língua Brasileira de Sinais.
+              </p>
+            </div>
+            <div class="card card-pad-lg card-accent hover-lift reveal" style="--delay: 240ms">
+              <div class="icon-bubble bub-brand"><i data-ico="building"></i></div>
+              <h4 class="mt-2">Telessaúde assistida</h4>
+              <p class="small muted">
+                Quem não tem internet em casa faz a consulta na própria UBS,
+                acompanhado por um agente comunitário de saúde.
+              </p>
+            </div>
+          </div>
+
+          <div class="card card-pad-lg mt-4 reveal" style="border-color: var(--brand)">
+            <div class="row-between">
+              <div class="row" style="flex: 1; min-width: 260px">
+                <div class="icon-bubble icon-bubble-lg bub-solid">
+                  <i data-ico="shield"></i>
+                </div>
+                <div>
+                  <h4>Seus dados são seus — e só seus</h4>
+                  <p class="small muted mt-1" style="max-width: 62ch">
+                    O CRIMED segue a Lei Geral de Proteção de Dados (Lei
+                    13.709/2018). Você pode consultar, exportar e revogar
+                    consentimentos a qualquer momento no seu perfil.
+                  </p>
+                </div>
+              </div>
+              <a href="perfil.html" class="btn btn-brand-outline">
+                <i data-ico="lock"></i> Central de privacidade
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== DEPOIMENTOS -->
+      <section class="section section-alt">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="eyebrow"><i data-ico="message"></i> Quem já usou</span>
+            <h2>O impacto em quem mais precisa</h2>
+          </div>
+
+          <div class="auto-grid" style="--min: 290px">
+            <article class="card card-pad-lg quote-card hover-lift reveal">
+              <p>
+                Moro no Rio Maina e precisava pegar dois ônibus para uma
+                consulta de retorno de dez minutos. Agora resolvo da cozinha de
+                casa, com a médica vendo meu prontuário inteiro.
+              </p>
+              <div class="quote-author">
+                <div class="avatar">MB</div>
+                <div>
+                  <strong>Maria Aparecida Búrigo</strong>
+                  <span>68 anos · Rio Maina</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card card-pad-lg quote-card hover-lift reveal" style="--delay: 90ms">
+              <p>
+                O tempo que eu gastava procurando papel de exame antigo agora
+                eu uso ouvindo o paciente. O prontuário já abre do lado do
+                vídeo, com o histórico todo.
+              </p>
+              <div class="quote-author">
+                <div class="avatar avatar-doc">HB</div>
+                <div>
+                  <strong>Dra. Helena Búrigo</strong>
+                  <span>Clínica Médica · UBS Centro</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card card-pad-lg quote-card hover-lift reveal" style="--delay: 180ms">
+              <p>
+                Conseguimos enxergar a fila de cada unidade no mesmo painel.
+                Remanejar um profissional deixou de ser achismo e passou a ser
+                decisão com dado na mão.
+              </p>
+              <div class="quote-author">
+                <div class="avatar" style="background: linear-gradient(140deg, #2098fb, #003451)">
+                  SM
+                </div>
+                <div>
+                  <strong>Secretaria Municipal de Saúde</strong>
+                  <span>Gestão · Criciúma</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ FAQ -->
+      <section class="section" id="duvidas">
+        <div class="wrap" style="max-width: 820px">
+          <div class="section-head reveal">
+            <span class="eyebrow"><i data-ico="help-circle"></i> Dúvidas frequentes</span>
+            <h2>Perguntas que todo mundo faz</h2>
+          </div>
+
+          <div class="card card-pad-lg reveal" data-accordion-single>
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                A teleconsulta é gratuita?
+                <i data-ico="plus"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  Sim. O CRIMED é um serviço da rede pública municipal de
+                  Criciúma. Qualquer pessoa com Cartão SUS vinculado a uma UBS
+                  do município pode usar, sem nenhum custo.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                E se eu não tiver celular ou internet em casa?
+                <i data-ico="plus"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  Todas as 10 UBS têm um ponto de telessaúde assistida. Você vai
+                  até a unidade mais próxima e faz a consulta com o especialista
+                  de lá mesmo, acompanhado por um agente comunitário — sem
+                  precisar viajar até o centro.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                A receita digital vale na farmácia?
+                <i data-ico="plus"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  Sim. Cada receita recebe um código de validação e um QR Code
+                  que a farmácia consulta para confirmar autenticidade,
+                  profissional responsável e validade — o mesmo modelo da
+                  prescrição eletrônica nacional.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                Quais casos NÃO podem ser atendidos por teleconsulta?
+                <i data-ico="plus"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  Emergências e casos que exijam exame físico ou procedimento
+                  presencial. Se houver dor no peito, falta de ar, sangramento
+                  intenso, desmaio ou sinais de AVC, ligue
+                  <strong>192 (SAMU)</strong> imediatamente. A triagem da Cris
+                  identifica esses casos e orienta a buscar a emergência.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                Minha consulta fica gravada?
+                <i data-ico="plus"></i>
+              </button>
+              <div class="accordion-panel">
+                <div>
+                  Não. Nenhuma teleconsulta é gravada sem consentimento
+                  explícito e registrado. O que fica salvo é apenas o registro
+                  clínico escrito pelo profissional, protegido pelo sigilo
+                  médico e pela LGPD.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= CTA -->
+      <section class="section" style="padding-top: 0">
+        <div class="wrap">
+          <div class="cta-band reveal reveal-zoom">
+            <h2>Pronto para testar o protótipo?</h2>
+            <p>
+              Entre como paciente, profissional de saúde ou gestor e navegue
+              pelo sistema completo — todos os dados são simulados.
+            </p>
+            <div class="cta-actions">
+              <a href="acesso.html" class="btn btn-white btn-lg">
+                <i data-ico="log-in"></i> Acessar o sistema
+              </a>
+              <a href="sobre.html" class="btn btn-lg btn-outline" style="color: #fff; border-color: rgba(255, 255, 255, 0.5)">
+                <i data-ico="book"></i> Conhecer o projeto
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================ RODAPÉ -->
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer-grid">
+          <div>
+            <a class="brand brand-light" href="index.html">
+              <span class="brand-mark"><i data-ico="logo"></i></span>
+              <span class="brand-text">CRIMED<small>Tele-Saúde Criciúma</small></span>
+            </a>
+            <p class="small mt-2" style="max-width: 38ch; color: rgba(255, 255, 255, 0.66)">
+              Programa Tele-Saúde Expandido (PTSE-001) — iniciativa da
+              Secretaria Municipal de Saúde de Criciúma para ampliar o acesso
+              da população ao SUS.
+            </p>
+            <div class="social mt-3">
+              <a href="#" aria-label="Instagram"><i data-ico="globe"></i></a>
+              <a href="#" aria-label="WhatsApp"><i data-ico="message"></i></a>
+              <a href="#" aria-label="E-mail"><i data-ico="mail"></i></a>
+            </div>
+          </div>
+
+          <div>
+            <h5>Serviços</h5>
+            <ul class="footer-list">
+              <li><a href="acesso.html">Agendar consulta</a></li>
+              <li><a href="acesso.html">Minhas consultas</a></li>
+              <li><a href="acesso.html">Prontuário</a></li>
+              <li><a href="acesso.html">Receitas digitais</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h5>Institucional</h5>
+            <ul class="footer-list">
+              <li><a href="sobre.html">O Projeto</a></li>
+              <li><a href="#unidades">Unidades de saúde</a></li>
+              <li><a href="#acessibilidade">Acessibilidade</a></li>
+              <li><a href="perfil.html">Privacidade e LGPD</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h5>Emergência</h5>
+            <ul class="footer-list">
+              <li><i data-ico="ambulance"></i> SAMU · 192</li>
+              <li><i data-ico="alert-triangle"></i> Bombeiros · 193</li>
+              <li><i data-ico="heart"></i> CVV · 188</li>
+              <li><i data-ico="phone"></i> Ouvidoria SUS · 136</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>
+            © 2026 Prefeitura Municipal de Criciúma · Secretaria de Saúde —
+            protótipo acadêmico
+          </span>
+          <span>Desenvolvido com HTML, CSS e JavaScript</span>
         </div>
       </div>
-    </section>
-
-    <section id="servicos" class="services reveal">
-      <h2>Como podemos ajudar?</h2>
-      <p class="subtitle">
-        Serviços de saúde digitais pensados para a sua comodidade e bem-estar.
-      </p>
-
-      <div class="services-grid">
-        <div class="card hover-scale">
-          <div class="icon-box"><i class="fa-solid fa-video"></i></div>
-          <h3>Consultas Online</h3>
-          <p>
-            Fale com médicos de diversas especialidades por videochamada
-            diretamente no seu celular ou computador, com segurança ponta a
-            ponta.
-          </p>
-        </div>
-
-        <div class="card hover-scale">
-          <div class="icon-box"><i class="fa-solid fa-file-medical"></i></div>
-          <h3>Receitas e Exames</h3>
-          <p>
-            Receba receitas médicas, atestados e pedidos de exames assinados
-            digitalmente com validade em todo o território nacional.
-          </p>
-        </div>
-
-        <div class="card hover-scale">
-          <div class="icon-box"><i class="fa-solid fa-user-doctor"></i></div>
-          <h3>Atendimento 24h</h3>
-          <p>
-            Triagem médica disponível a qualquer hora do dia ou da noite para
-            casos de urgência leve. Enfermeiros e clínicos gerais a postos.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="contato" class="contact-section reveal">
-      <div class="contact-container">
-        <div class="contact-info">
-          <h2>Fale Conosco</h2>
-          <p>
-            Tem alguma dúvida sobre como funciona a telemedicina? Nossa equipe
-            de suporte está pronta para ajudar.
-          </p>
-          <ul>
-            <li>
-              <i class="fa-solid fa-location-dot"></i> Centro, Criciúma - SC
-            </li>
-            <li>
-              <i class="fa-solid fa-envelope"></i>
-              suporte@telesaude-criciuma.com.br
-            </li>
-            <li><i class="fa-solid fa-phone"></i> (48) 3000-0000</li>
-          </ul>
-          <div class="social-links">
-            <a href="#"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
-            <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-          </div>
-        </div>
-        <form
-          class="contact-form"
-          onsubmit="
-            event.preventDefault();
-            showToast(
-              'Mensagem enviada com sucesso! Retornaremos em breve.',
-              'success',
-            );
-            this.reset();
-          "
-        >
-          <div class="form-group">
-            <input type="text" placeholder="Seu Nome" required />
-          </div>
-          <div class="form-group">
-            <input type="email" placeholder="Seu E-mail" required />
-          </div>
-          <div class="form-group">
-            <textarea
-              rows="4"
-              placeholder="Sua Mensagem..."
-              required
-            ></textarea>
-          </div>
-          <button type="submit" class="btn-primary w-100">
-            Enviar Mensagem
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <footer id="footer">
-      <p>&copy; 2026 Tele-Saúde Criciúma. Todos os direitos reservados.</p>
-      <p>Desenvolvido para conectar tecnologia e saúde de forma humanizada.</p>
     </footer>
 
+    <!-- ============================================== ASSISTENTE + LGPD -->
+    <div id="cris-root"></div>
+    <div id="lgpd-root"></div>
     <div id="toast-container"></div>
-    <script src="script.js"></script>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/assistente.js"></script>
+    <script src="assets/js/app.js"></script>
   </body>
 </html>
