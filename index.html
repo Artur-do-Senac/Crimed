@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tele-Saúde Criciúma</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">
+        <i class="fa-solid fa-heart-pulse"></i> Tele-Saúde <span>Criciúma</span>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+      <a href="acesso.html" class="btn-nav">Área do Paciente</a>
+    </header>
+
+    <section id="inicio" class="hero reveal">
+      <div class="hero-container">
+        <div class="hero-text">
+          <h1>
+            Cuidando de você, <br /><span class="highlight"
+              >de frente para o futuro.</span
+            >
+          </h1>
+          <p>
+            Acesse consultas médicas online com profissionais qualificados, sem
+            sair do conforto da sua casa. Rápido, seguro e humanizado.
+          </p>
+          <div class="hero-buttons">
+            <a href="acesso.html" class="btn-primary">Agendar Teleconsulta</a>
+            <a href="#servicos" class="btn-secondary">Saber Mais</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicos" class="services reveal">
+      <h2>Como podemos ajudar?</h2>
+      <p class="subtitle">
+        Serviços de saúde digitais pensados para a sua comodidade e bem-estar.
+      </p>
+
+      <div class="services-grid">
+        <div class="card hover-scale">
+          <div class="icon-box"><i class="fa-solid fa-video"></i></div>
+          <h3>Consultas Online</h3>
+          <p>
+            Fale com médicos de diversas especialidades por videochamada
+            diretamente no seu celular ou computador, com segurança ponta a
+            ponta.
+          </p>
+        </div>
+
+        <div class="card hover-scale">
+          <div class="icon-box"><i class="fa-solid fa-file-medical"></i></div>
+          <h3>Receitas e Exames</h3>
+          <p>
+            Receba receitas médicas, atestados e pedidos de exames assinados
+            digitalmente com validade em todo o território nacional.
+          </p>
+        </div>
+
+        <div class="card hover-scale">
+          <div class="icon-box"><i class="fa-solid fa-user-doctor"></i></div>
+          <h3>Atendimento 24h</h3>
+          <p>
+            Triagem médica disponível a qualquer hora do dia ou da noite para
+            casos de urgência leve. Enfermeiros e clínicos gerais a postos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato" class="contact-section reveal">
+      <div class="contact-container">
+        <div class="contact-info">
+          <h2>Fale Conosco</h2>
+          <p>
+            Tem alguma dúvida sobre como funciona a telemedicina? Nossa equipe
+            de suporte está pronta para ajudar.
+          </p>
+          <ul>
+            <li>
+              <i class="fa-solid fa-location-dot"></i> Centro, Criciúma - SC
+            </li>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              suporte@telesaude-criciuma.com.br
+            </li>
+            <li><i class="fa-solid fa-phone"></i> (48) 3000-0000</li>
+          </ul>
+          <div class="social-links">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <form
+          class="contact-form"
+          onsubmit="
+            event.preventDefault();
+            showToast(
+              'Mensagem enviada com sucesso! Retornaremos em breve.',
+              'success',
+            );
+            this.reset();
+          "
+        >
+          <div class="form-group">
+            <input type="text" placeholder="Seu Nome" required />
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Seu E-mail" required />
+          </div>
+          <div class="form-group">
+            <textarea
+              rows="4"
+              placeholder="Sua Mensagem..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-100">
+            Enviar Mensagem
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer id="footer">
+      <p>&copy; 2026 Tele-Saúde Criciúma. Todos os direitos reservados.</p>
+      <p>Desenvolvido para conectar tecnologia e saúde de forma humanizada.</p>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

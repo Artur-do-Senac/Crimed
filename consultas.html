@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minhas Consultas | Tele-Saúde Criciúma</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo sidebar-logo">
+          <i class="fa-solid fa-heart-pulse"></i> Tele-Saúde
+        </div>
+        <nav class="side-nav">
+          <a href="dashboard.html"
+            ><i class="fa-solid fa-house-chimney-medical"></i> Início</a
+          >
+          <a href="#" onclick="openModal('modalAgendamento')"
+            ><i class="fa-regular fa-calendar-plus"></i> Agendar Consulta</a
+          >
+          <a href="consultas.html" class="active"
+            ><i class="fa-solid fa-laptop-medical"></i> Minhas Consultas</a
+          >
+          <a href="prontuarios.html"
+            ><i class="fa-solid fa-file-waveform"></i> Prontuários e Exames</a
+          >
+          <a href="perfil.html"
+            ><i class="fa-regular fa-user"></i> Meu Perfil</a
+          >
+        </nav>
+        <a href="index.html" class="logout-btn"
+          ><i class="fa-solid fa-right-from-bracket"></i> Sair</a
+        >
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="dash-header">
+          <h2>Minhas Consultas</h2>
+          <div class="user-actions">
+            <div class="user-avatar" id="avatar-iniciais">AS</div>
+          </div>
+        </header>
+
+        <div class="dash-grid" style="grid-template-columns: 1fr">
+          <section class="dash-card">
+            <div
+              class="card-header"
+              style="justify-content: flex-start; gap: 20px"
+            >
+              <button
+                class="tab-btn active"
+                onclick="filtrarConsultas('Todas', this)"
+              >
+                Todas
+              </button>
+              <button
+                class="tab-btn"
+                onclick="filtrarConsultas('Confirmada', this)"
+              >
+                Agendadas
+              </button>
+              <button
+                class="tab-btn"
+                onclick="filtrarConsultas('Cancelada', this)"
+              >
+                Canceladas
+              </button>
+            </div>
+
+            <div id="pagina-consultas-container" class="consultas-list">
+              <!-- Renderizado via JS -->
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

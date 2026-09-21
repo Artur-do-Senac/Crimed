@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acesso | Tele-Saúde Criciúma</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body class="auth-body">
+    <div class="auth-wrapper">
+      <div class="auth-panel">
+        <div class="auth-image">
+          <div class="auth-image-overlay">
+            <h2>Tele-Saúde Criciúma</h2>
+            <p>
+              Seu prontuário, suas consultas e sua saúde a um clique de
+              distância.
+            </p>
+          </div>
+        </div>
+
+        <div class="auth-content">
+          <a href="index.html" class="back-link"
+            ><i class="fa-solid fa-arrow-left"></i> Voltar</a
+          >
+          <div class="auth-header">
+            <div class="auth-tabs">
+              <button class="tab-btn active" onclick="switchTab('login')">
+                Login
+              </button>
+              <button class="tab-btn" onclick="switchTab('cadastro')">
+                Cadastro
+              </button>
+            </div>
+          </div>
+
+          <form
+            id="form-login"
+            class="auth-form active"
+            onsubmit="
+              event.preventDefault();
+              window.location.href = 'dashboard.html';
+            "
+          >
+            <h2>Bem-vindo de volta!</h2>
+            <p>Acesse seu painel de teleconsultas.</p>
+            <div class="form-group input-icon">
+              <i class="fa-regular fa-envelope"></i>
+              <input type="text" placeholder="E-mail ou CPF" required />
+            </div>
+            <div class="form-group input-icon">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" placeholder="Sua senha" required />
+            </div>
+            <a href="#" class="forgot-password">Esqueceu a senha?</a>
+            <button type="submit" class="btn-primary w-100 pulse-btn">
+              Entrar no Sistema
+            </button>
+          </form>
+
+          <form
+            id="form-cadastro"
+            class="auth-form"
+            onsubmit="
+              event.preventDefault();
+              showToast('Cadastro realizado! Faça login.', 'success');
+              switchTab('login');
+            "
+          >
+            <h2>Crie sua conta</h2>
+            <p>Preencha os dados abaixo para se registrar.</p>
+            <div class="form-row">
+              <div class="form-group half">
+                <input type="text" placeholder="Nome Completo" required />
+              </div>
+              <div class="form-group half">
+                <input
+                  type="text"
+                  placeholder="CPF (000.000.000-00)"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group half">
+                <input type="date" required />
+              </div>
+              <div class="form-group half">
+                <input type="text" placeholder="WhatsApp" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="email" placeholder="E-mail" required />
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Crie uma Senha" required />
+            </div>
+            <button type="submit" class="btn-primary w-100">
+              Finalizar Cadastro
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

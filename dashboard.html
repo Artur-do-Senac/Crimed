@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Painel | Tele-Saúde Criciúma</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-layout">
+      <aside class="sidebar">
+        <div class="logo sidebar-logo">
+          <i class="fa-solid fa-heart-pulse"></i> Tele-Saúde
+        </div>
+        <nav class="side-nav">
+          <a href="dashboard.html" class="active"
+            ><i class="fa-solid fa-house-chimney-medical"></i> Início</a
+          >
+          <a href="#" onclick="openModal('modalAgendamento')"
+            ><i class="fa-regular fa-calendar-plus"></i> Agendar Consulta</a
+          >
+          <a href="consultas.html"
+            ><i class="fa-solid fa-laptop-medical"></i> Minhas Consultas</a
+          >
+          <a href="prontuarios.html"
+            ><i class="fa-solid fa-file-waveform"></i> Prontuários e Exames</a
+          >
+          <a href="perfil.html"
+            ><i class="fa-regular fa-user"></i> Meu Perfil</a
+          >
+        </nav>
+        <a href="index.html" class="logout-btn"
+          ><i class="fa-solid fa-right-from-bracket"></i> Sair</a
+        >
+      </aside>
+
+      <main class="main-content">
+        <header class="dash-header">
+          <h2>Olá, Artur! 👋</h2>
+          <div class="user-actions">
+            <div
+              class="notification-icon"
+              onclick="showToast('Bem-vindo de volta ao seu painel!', 'info')"
+            >
+              <i class="fa-regular fa-bell"></i>
+              <span class="badge" id="notif-badge">0</span>
+            </div>
+            <div class="user-avatar">AS</div>
+          </div>
+        </header>
+
+        <div class="dash-grid">
+          <section class="dash-card highlight-card">
+            <div class="card-header">
+              <h3>Suas Próximas Consultas</h3>
+              <button
+                class="btn-primary btn-sm"
+                onclick="openModal('modalAgendamento')"
+              >
+                <i class="fa-solid fa-plus"></i> Nova
+              </button>
+            </div>
+            <div id="proximas-consultas-container"></div>
+          </section>
+
+          <section class="dash-card action-card">
+            <h3>Ações Rápidas</h3>
+            <div class="action-buttons">
+              <button
+                class="action-btn hover-scale"
+                onclick="openModal('modalAgendamento')"
+              >
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Novo Agendamento</span>
+              </button>
+              <button
+                class="action-btn hover-scale"
+                onclick="
+                  showToast('Nenhuma receita recente encontrada.', 'error')
+                "
+              >
+                <i class="fa-solid fa-file-prescription"></i>
+                <span>Última Receita</span>
+              </button>
+              <button
+                class="action-btn hover-scale"
+                onclick="openModal('modalAvaliacao')"
+              >
+                <i class="fa-solid fa-star"></i>
+                <span>Avaliar Atendimento</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="dash-card history-card" style="grid-column: 1 / -1">
+            <h3>Histórico de Prontuários</h3>
+            <div class="table-responsive">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Profissional</th>
+                    <th>Especialidade</th>
+                    <th>Diagnóstico/Resumo</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="historico-tbody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="modalAgendamento" class="modal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal" onclick="closeModal('modalAgendamento')"
+          >&times;</span
+        >
+        <h2>Agendar Nova Teleconsulta</h2>
+        <form class="modal-form" id="form-novo-agendamento">
+          <div class="form-group">
+            <label>Especialidade</label>
+            <select id="agendamento-especialidade" required>
+              <option value="">Selecione...</option>
+              <option value="Clínica Médica">Clínica Médica</option>
+              <option value="Cardiologia">Cardiologia</option>
+              <option value="Neurologia">Neurologia</option>
+              <option value="Psicologia">Psicologia</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Profissional</label>
+            <select id="agendamento-medico" required>
+              <option value="">Selecione o profissional</option>
+              <option value="Dr. Fernando Silva">Dr. Fernando Silva</option>
+              <option value="Dra. Vanessa Costa">Dra. Vanessa Costa</option>
+              <option value="Dr. Carlos Mendes">Dr. Carlos Mendes</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Data Desejada</label>
+              <input type="date" id="agendamento-data" required />
+            </div>
+            <div class="form-group half">
+              <label>Horário</label>
+              <select id="agendamento-hora" required>
+                <option value="">Selecione...</option>
+                <option value="09:00">09:00</option>
+                <option value="10:30">10:30</option>
+                <option value="14:00">14:00</option>
+                <option value="15:30">15:30</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary w-100">
+            Confirmar Agendamento
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="modalAvaliacao" class="modal">
+      <div class="modal-content animate-pop">
+        <span class="close-modal" onclick="closeModal('modalAvaliacao')"
+          >&times;</span
+        >
+        <h2>Avaliar Atendimento</h2>
+        <p>Sua opinião é fundamental para melhorarmos nossos serviços.</p>
+        <form
+          class="modal-form"
+          onsubmit="
+            event.preventDefault();
+            showToast('Obrigado pelo seu feedback!', 'success');
+            closeModal('modalAvaliacao');
+          "
+        >
+          <div class="form-group star-rating">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-regular fa-star"></i>
+          </div>
+          <div class="form-group">
+            <label>Comentários sobre a teleconsulta</label>
+            <textarea
+              rows="4"
+              placeholder="Como foi sua experiência?"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-100">
+            Enviar Avaliação
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Perfil | Tele-Saúde Criciúma</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo sidebar-logo">
+          <i class="fa-solid fa-heart-pulse"></i> Tele-Saúde
+        </div>
+        <nav class="side-nav">
+          <a href="dashboard.html"
+            ><i class="fa-solid fa-house-chimney-medical"></i> Início</a
+          >
+          <a
+            href="#"
+            onclick="
+              showToast(
+                'Agendamentos devem ser feitos pela tela de Início.',
+                'info',
+              )
+            "
+            ><i class="fa-regular fa-calendar-plus"></i> Agendar Consulta</a
+          >
+          <a href="consultas.html"
+            ><i class="fa-solid fa-laptop-medical"></i> Minhas Consultas</a
+          >
+          <a href="prontuarios.html"
+            ><i class="fa-solid fa-file-waveform"></i> Prontuários e Exames</a
+          >
+          <a href="perfil.html" class="active"
+            ><i class="fa-regular fa-user"></i> Meu Perfil</a
+          >
+        </nav>
+        <a href="index.html" class="logout-btn"
+          ><i class="fa-solid fa-right-from-bracket"></i> Sair</a
+        >
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="dash-header">
+          <h2>Meu Perfil</h2>
+          <div class="user-actions">
+            <div class="user-avatar" id="avatar-iniciais">AS</div>
+          </div>
+        </header>
+
+        <div
+          class="dash-grid"
+          style="grid-template-columns: 1fr; max-width: 800px"
+        >
+          <section class="dash-card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid var(--border-color);
+              "
+            >
+              <div
+                class="user-avatar"
+                id="avatar-perfil"
+                style="width: 80px; height: 80px; font-size: 32px"
+              >
+                AS
+              </div>
+              <div>
+                <h3 id="perfil-nome-display">Carregando...</h3>
+                <p style="color: var(--text-gray)">Paciente Tele-Saúde</p>
+              </div>
+            </div>
+
+            <form id="form-perfil" onsubmit="salvarPerfil(event)">
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>Nome Completo</label>
+                  <input type="text" id="perfil-nome" required />
+                </div>
+                <div class="form-group half">
+                  <label>CPF</label>
+                  <input
+                    type="text"
+                    id="perfil-cpf"
+                    readonly
+                    style="background: #f0f0f0; cursor: not-allowed"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>E-mail</label>
+                  <input type="email" id="perfil-email" required />
+                </div>
+                <div class="form-group half">
+                  <label>Telefone / WhatsApp</label>
+                  <input type="text" id="perfil-telefone" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>Data de Nascimento</label>
+                  <input type="date" id="perfil-nascimento" required />
+                </div>
+                <div class="form-group half">
+                  <label>Tipo Sanguíneo</label>
+                  <select id="perfil-sangue">
+                    <option value="">Não sei informar</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  margin-top: 10px;
+                "
+              >
+                <button type="submit" class="btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
