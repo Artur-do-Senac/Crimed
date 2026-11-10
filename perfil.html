@@ -2,9 +2,9 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#208049" />
-    <title>Meu Perfil e Privacidade · CRIMED</title>
+    <title>Meu perfil · CRIMED</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/layout.css" />
     <link rel="stylesheet" href="assets/css/pages.css" />
+    <link rel="stylesheet" href="assets/css/paciente.css" />
   </head>
 
   <body data-page="perfil">
@@ -29,230 +30,178 @@
       <div class="app-main">
         <header data-shell="topbar"></header>
 
-        <main class="app-content" id="conteudo">
-          <div class="dash-grid">
-            <!-- ============================================ DADOS PESSOAIS -->
-            <section class="col-7">
-              <div class="card card-pad-lg">
-                <div class="row mb-3" style="gap: 1.1rem">
-                  <div class="avatar avatar-lg" id="perfil-avatar">AS</div>
-                  <div>
-                    <h3 id="perfil-nome-display">Carregando…</h3>
-                    <p class="small muted">
-                      Paciente · rede municipal de saúde de Criciúma
-                    </p>
-                    <div class="row mt-1" style="gap: 0.4rem">
-                      <span class="badge badge-ok">
-                        <i data-ico="check-circle"></i> Cadastro verificado
-                      </span>
-                      <span class="badge badge-info">
-                        <i data-ico="building"></i> UBS Centro
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <hr class="divider" />
-
-                <form id="form-perfil">
-                  <h4 class="mb-2">Dados pessoais</h4>
-                  <div class="field-row">
-                    <div class="field">
-                      <label for="p-nome">Nome completo</label>
-                      <input type="text" id="p-nome" required />
-                    </div>
-                    <div class="field">
-                      <label for="p-cpf">CPF</label>
-                      <input type="text" id="p-cpf" readonly />
-                    </div>
-                  </div>
-                  <div class="field-row">
-                    <div class="field">
-                      <label for="p-cns">Cartão Nacional de Saúde</label>
-                      <input type="text" id="p-cns" readonly />
-                    </div>
-                    <div class="field">
-                      <label for="p-nascimento">Data de nascimento</label>
-                      <input type="date" id="p-nascimento" required />
-                    </div>
-                  </div>
-                  <div class="field-row">
-                    <div class="field">
-                      <label for="p-email">E-mail</label>
-                      <input type="email" id="p-email" required />
-                    </div>
-                    <div class="field">
-                      <label for="p-telefone">Telefone / WhatsApp</label>
-                      <input type="text" id="p-telefone" required />
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label for="p-endereco">Endereço</label>
-                    <input type="text" id="p-endereco" />
-                  </div>
-                  <div class="field">
-                    <label for="p-unidade">UBS de referência</label>
-                    <select id="p-unidade">
-                      <option value="ubs-centro">UBS Centro</option>
-                      <option value="ubs-prospera">UBS Próspera</option>
-                      <option value="ubs-riomaina">UBS Rio Maina</option>
-                      <option value="ubs-santaluzia">UBS Santa Luzia</option>
-                      <option value="ubs-pinheirinho">UBS Pinheirinho</option>
-                      <option value="ubs-metropol">UBS Metropol</option>
-                      <option value="ubs-quartalinha">UBS Quarta Linha</option>
-                      <option value="ubs-boavista">UBS Boa Vista</option>
-                      <option value="ubs-minadomato">UBS Mina do Mato</option>
-                      <option value="ubs-saoluiz">UBS São Luiz</option>
-                    </select>
-                  </div>
-
-                  <hr class="divider" />
-
-                  <h4 class="mb-2">Informações de saúde</h4>
-                  <div class="field-row">
-                    <div class="field">
-                      <label for="p-sangue">Tipo sanguíneo</label>
-                      <select id="p-sangue">
-                        <option value="">Não sei informar</option>
-                        <option>A+</option><option>A-</option>
-                        <option>B+</option><option>B-</option>
-                        <option>AB+</option><option>AB-</option>
-                        <option>O+</option><option>O-</option>
-                      </select>
-                    </div>
-                    <div class="field">
-                      <label for="p-alergias">Alergias conhecidas</label>
-                      <input type="text" id="p-alergias" placeholder="Ex.: Dipirona" />
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label for="p-condicoes">Condições de saúde / uso contínuo</label>
-                    <input type="text" id="p-condicoes" placeholder="Ex.: Hipertensão, rinite" />
-                    <span class="field-hint">
-                      Essas informações aparecem para o profissional no início da
-                      teleconsulta.
-                    </span>
-                  </div>
-
-                  <div class="row-between mt-3">
-                    <span class="small muted">
-                      <i data-ico="lock"></i> Alterações registradas em log de auditoria
-                    </span>
-                    <button type="submit" class="btn btn-primary">
-                      <i data-ico="check"></i> Salvar alterações
-                    </button>
-                  </div>
-                </form>
+        <main class="app-content pac-content" id="conteudo">
+          <!-- ================================================ IDENTIFICAÇÃO -->
+          <section class="card perfil-topo">
+            <div class="avatar avatar-lg" id="perfil-avatar">--</div>
+            <div class="perfil-topo-info">
+              <h2 id="perfil-nome-display">Carregando…</h2>
+              <p id="perfil-cpf">CPF</p>
+              <div class="perfil-tags">
+                <span class="badge badge-info"><i data-ico="building"></i> <span id="perfil-ubs">UBS</span></span>
+                <span class="badge badge-ok" id="perfil-gov" hidden><i data-ico="shield"></i> Conta gov.br</span>
               </div>
-            </section>
+            </div>
+          </section>
 
-            <!-- ===================================== CENTRAL DE PRIVACIDADE -->
-            <section class="col-5">
-              <div class="stack" style="--gap: 1.25rem">
-                <div class="card card-pad-lg card-accent">
-                  <div class="card-head">
-                    <h3><i data-ico="shield"></i> Central de privacidade</h3>
-                  </div>
-                  <p class="small muted mb-3">
-                    Seus direitos como titular de dados, garantidos pela Lei
-                    Geral de Proteção de Dados (Lei 13.709/2018).
-                  </p>
+          <!-- ==================================================== MEUS DADOS -->
+          <form id="form-perfil" class="card perfil-card-form" novalidate>
+            <h3 class="pac-h2">Meus dados</h3>
 
-                  <div class="stack" style="--gap: 0.9rem">
-                    <label class="switch row-between" style="width: 100%">
-                      <span>
-                        <strong class="small">Compartilhar prontuário com a rede</strong>
-                        <span class="tiny muted" style="display: block">
-                          Permite que qualquer profissional da rede municipal
-                          veja seu histórico durante um atendimento.
-                        </span>
-                      </span>
-                      <input type="checkbox" checked data-consent="Compartilhamento do prontuário" />
-                    </label>
+            <div class="field" data-campo="nome">
+              <label for="p-nome">Nome completo</label>
+              <input type="text" id="p-nome" autocomplete="name" required />
+              <span class="field-error" role="alert"></span>
+            </div>
 
-                    <label class="switch row-between" style="width: 100%">
-                      <span>
-                        <strong class="small">Lembretes por WhatsApp e e-mail</strong>
-                        <span class="tiny muted" style="display: block">
-                          Avisos de consulta, resultado de exame e receita.
-                        </span>
-                      </span>
-                      <input type="checkbox" checked data-consent="Lembretes por mensagem" />
-                    </label>
+            <div class="field-row">
+              <div class="field">
+                <label for="p-cpf">CPF</label>
+                <input type="text" id="p-cpf" readonly />
+              </div>
+              <div class="field">
+                <label for="p-nascimento">Data de nascimento</label>
+                <input type="date" id="p-nascimento" />
+              </div>
+            </div>
 
-                    <label class="switch row-between" style="width: 100%">
-                      <span>
-                        <strong class="small">Uso de dados anonimizados</strong>
-                        <span class="tiny muted" style="display: block">
-                          Estatísticas de saúde pública, sem qualquer
-                          identificação pessoal.
-                        </span>
-                      </span>
-                      <input type="checkbox" checked data-consent="Dados anonimizados para pesquisa" />
-                    </label>
+            <div class="field-row">
+              <div class="field" data-campo="telefone">
+                <label for="p-telefone">Celular (WhatsApp)</label>
+                <input type="tel" id="p-telefone" inputmode="numeric" data-mask="tel" required />
+                <span class="field-error" role="alert"></span>
+              </div>
+              <div class="field">
+                <label for="p-email">E-mail</label>
+                <input type="email" id="p-email" />
+              </div>
+            </div>
 
-                    <label class="switch row-between" style="width: 100%">
-                      <span>
-                        <strong class="small">Gravação das teleconsultas</strong>
-                        <span class="tiny muted" style="display: block">
-                          Desativado por padrão. Nada é gravado sem sua
-                          autorização explícita.
-                        </span>
-                      </span>
-                      <input type="checkbox" data-consent="Gravação de teleconsulta" />
-                    </label>
-                  </div>
+            <div class="field">
+              <label for="p-unidade">Minha UBS</label>
+              <select id="p-unidade"></select>
+            </div>
 
-                  <hr class="divider" />
+            <div class="field">
+              <label for="p-endereco">Endereço <span class="opcional">(opcional)</span></label>
+              <input type="text" id="p-endereco" autocomplete="street-address" />
+            </div>
 
-                  <div class="stack" style="--gap: 0.55rem">
-                    <button class="btn btn-outline btn-block" id="lgpd-exportar" style="justify-content: flex-start">
-                      <i data-ico="download"></i> Baixar todos os meus dados (JSON)
+            <div class="field">
+              <label for="p-cns">Cartão do SUS</label>
+              <input type="text" id="p-cns" readonly placeholder="Será vinculado na sua UBS" />
+            </div>
+
+            <h3 class="pac-h2 mt-3">Minha saúde</h3>
+            <p class="small muted mb-2">O médico vê estas informações no começo da consulta.</p>
+            <div class="field-row">
+              <div class="field">
+                <label for="p-sangue">Tipo sanguíneo</label>
+                <select id="p-sangue">
+                  <option value="">Não sei</option>
+                  <option>A+</option><option>A-</option>
+                  <option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option>
+                  <option>O+</option><option>O-</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="p-alergias">Alergias</label>
+                <input type="text" id="p-alergias" placeholder="Ex.: dipirona" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="p-condicoes">Doenças ou remédios de uso contínuo</label>
+              <input type="text" id="p-condicoes" placeholder="Ex.: pressão alta, diabetes" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              <i data-ico="check"></i> Salvar alterações
+            </button>
+          </form>
+
+          <!-- ================================================= ACESSIBILIDADE -->
+          <section class="card">
+            <h3 class="pac-h2">Facilitar a leitura</h3>
+            <div class="perfil-a11y">
+              <div class="perfil-a11y-linha">
+                <span>Tamanho da letra</span>
+                <div class="seg">
+                  <button data-a11y="fonte-menos" aria-label="Diminuir letra">A−</button>
+                  <button data-a11y="fonte-mais" aria-label="Aumentar letra">A+</button>
+                </div>
+              </div>
+              <div class="perfil-a11y-linha">
+                <span>Alto contraste</span>
+                <button class="btn btn-outline btn-sm" data-a11y="contraste"><i data-ico="contrast"></i> Alternar</button>
+              </div>
+              <div class="perfil-a11y-linha">
+                <span>Modo escuro</span>
+                <button class="btn btn-outline btn-sm" data-a11y="tema"><i data-ico="moon"></i> <span class="a11y-tema-label">Escuro</span></button>
+              </div>
+              <div class="perfil-a11y-linha">
+                <span>Tradução em Libras</span>
+                <button class="btn btn-outline btn-sm" data-a11y="libras"><i data-ico="accessibility"></i> Ativar</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- =================================================== PRIVACIDADE -->
+          <section class="card card-flush">
+            <div class="accordion-item">
+              <button class="accordion-trigger perfil-acc" aria-expanded="false">
+                <span><i data-ico="shield"></i> Privacidade e meus dados (LGPD)</span>
+                <i data-ico="chevron-down"></i>
+              </button>
+              <div class="accordion-panel">
+                <div class="perfil-acc-corpo">
+                  <label class="switch row-between perfil-switch">
+                    <span>
+                      <strong>Compartilhar prontuário com a rede</strong>
+                      <small>Profissionais da rede municipal podem ver seu histórico durante o atendimento.</small>
+                    </span>
+                    <input type="checkbox" checked data-consent="Compartilhamento do prontuário" />
+                  </label>
+                  <label class="switch row-between perfil-switch">
+                    <span>
+                      <strong>Lembretes por WhatsApp e e-mail</strong>
+                      <small>Avisos de consulta, exames e receitas.</small>
+                    </span>
+                    <input type="checkbox" checked data-consent="Lembretes por mensagem" />
+                  </label>
+                  <label class="switch row-between perfil-switch">
+                    <span>
+                      <strong>Uso de dados anônimos</strong>
+                      <small>Estatísticas de saúde pública, sem identificar você.</small>
+                    </span>
+                    <input type="checkbox" checked data-consent="Dados anonimizados para pesquisa" />
+                  </label>
+                  <label class="switch row-between perfil-switch">
+                    <span>
+                      <strong>Gravação das consultas</strong>
+                      <small>Desligado: nada é gravado sem a sua autorização.</small>
+                    </span>
+                    <input type="checkbox" data-consent="Gravação de teleconsulta" />
+                  </label>
+                  <div class="stack mt-3" style="--gap: 0.55rem">
+                    <button class="btn btn-outline btn-block" id="lgpd-exportar" type="button">
+                      <i data-ico="download"></i> Baixar meus dados
                     </button>
-                    <button class="btn btn-outline btn-block" data-open-modal="modal-auditoria" style="justify-content: flex-start">
+                    <button class="btn btn-outline btn-block" data-open-modal="modal-auditoria" type="button">
                       <i data-ico="list"></i> Quem acessou meu prontuário
                     </button>
-                    <button class="btn btn-outline btn-block" id="lgpd-apagar" style="justify-content: flex-start; color: var(--danger); border-color: var(--danger)">
-                      <i data-ico="trash"></i> Apagar meus dados de demonstração
+                    <button class="btn btn-ghost btn-block btn-perigo" id="lgpd-apagar" type="button">
+                      <i data-ico="trash"></i> Restaurar dados da demonstração
                     </button>
                   </div>
                 </div>
-
-                <div class="card card-pad-lg">
-                  <div class="card-head">
-                    <h3><i data-ico="accessibility"></i> Acessibilidade</h3>
-                  </div>
-                  <div class="stack" style="--gap: 0.6rem">
-                    <div class="row-between">
-                      <span class="small">Tamanho do texto</span>
-                      <div class="seg">
-                        <button data-a11y="fonte-menos">A−</button>
-                        <button data-a11y="fonte-mais">A+</button>
-                      </div>
-                    </div>
-                    <div class="row-between">
-                      <span class="small">Alto contraste</span>
-                      <button class="btn btn-outline btn-sm" data-a11y="contraste">
-                        <i data-ico="contrast"></i> Alternar
-                      </button>
-                    </div>
-                    <div class="row-between">
-                      <span class="small">Reduzir animações</span>
-                      <button class="btn btn-outline btn-sm" data-a11y="motion">
-                        <i data-ico="zap"></i> Alternar
-                      </button>
-                    </div>
-                    <div class="row-between">
-                      <span class="small">Tradução em Libras</span>
-                      <button class="btn btn-outline btn-sm" data-a11y="libras">
-                        <i data-ico="accessibility"></i> Ativar VLibras
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
-            </section>
-          </div>
+            </div>
+          </section>
+
+          <button class="btn btn-outline btn-lg btn-block perfil-sair" data-act="sair">
+            <i data-ico="log-out"></i> Sair da conta
+          </button>
         </main>
       </div>
     </div>

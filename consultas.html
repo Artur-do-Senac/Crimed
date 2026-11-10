@@ -2,7 +2,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#208049" />
     <title>Minhas Consultas · CRIMED</title>
     <link rel="manifest" href="manifest.json" />
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/layout.css" />
     <link rel="stylesheet" href="assets/css/pages.css" />
+    <link rel="stylesheet" href="assets/css/paciente.css" />
   </head>
 
   <body data-page="consultas">
@@ -29,48 +30,26 @@
       <div class="app-main">
         <header data-shell="topbar"></header>
 
-        <main class="app-content" id="conteudo">
-          <div class="dash-grid">
-            <section class="col-12">
-              <div class="card card-pad-lg">
-                <div class="card-head">
-                  <div class="pill-tabs" id="filtros-consulta">
-                    <button class="pill-tab is-active" data-filtro="Todas">Todas</button>
-                    <button class="pill-tab" data-filtro="Confirmada">Agendadas</button>
-                    <button class="pill-tab" data-filtro="Realizada">Realizadas</button>
-                    <button class="pill-tab" data-filtro="Cancelada">Canceladas</button>
-                  </div>
-                  <div class="row" style="gap: 0.5rem">
-                    <div class="input-icon" style="min-width: 200px">
-                      <i data-ico="search"></i>
-                      <input
-                        type="search"
-                        class="input"
-                        id="busca-consulta"
-                        placeholder="Buscar profissional…"
-                        aria-label="Buscar consulta"
-                      />
-                    </div>
-                    <button class="btn btn-primary" data-act="agendar">
-                      <i data-ico="calendar-plus"></i> Agendar
-                    </button>
-                  </div>
-                </div>
+        <main class="app-content pac-content" id="conteudo">
+          <a class="cta-agendar cta-agendar-compacto" href="agendar.html">
+            <span class="cta-agendar-ico"><i data-ico="calendar-plus"></i></span>
+            <span class="cta-agendar-txt">
+              <strong>Agendar nova consulta</strong>
+              <small>Com clínico geral, por vídeo</small>
+            </span>
+            <i data-ico="chevron-right"></i>
+          </a>
 
-                <div id="lista-consultas"></div>
-              </div>
-            </section>
-
-            <section class="col-12">
-              <div class="card card-pad-lg">
-                <div class="card-head">
-                  <h3><i data-ico="calendar"></i> Sua agenda do mês</h3>
-                  <span class="small muted" id="calendario-mes"></span>
-                </div>
-                <div id="calendario"></div>
-              </div>
-            </section>
+          <div class="seg-abas" id="abas-consulta" role="tablist">
+            <button class="is-active" data-aba="proximas" role="tab" aria-selected="true">
+              Próximas <span class="seg-num" id="qtd-proximas">0</span>
+            </button>
+            <button data-aba="anteriores" role="tab" aria-selected="false">
+              Anteriores <span class="seg-num" id="qtd-anteriores">0</span>
+            </button>
           </div>
+
+          <div class="cc-lista" id="lista-consultas"></div>
         </main>
       </div>
     </div>
@@ -81,7 +60,6 @@
     <script src="assets/js/icons.js"></script>
     <script src="assets/js/data.js"></script>
     <script src="assets/js/core.js"></script>
-    <script src="assets/js/charts.js"></script>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/paciente.js"></script>
     <script src="assets/js/assistente.js"></script>

@@ -36,14 +36,29 @@ E abra `http://localhost:5173`.
 
 ## Acesso ao sistema
 
-Na tela de acesso, escolha um dos três perfis. Usuário e senha já vêm
-preenchidos (`demo1234`) — qualquer valor é aceito.
+As contas ficam guardadas no navegador (localStorage). O login valida CPF
+(dígitos verificadores), senha e o **perfil da conta**: paciente só entra na
+área do paciente e profissional/gestor só na área da equipe.
 
-| Perfil | Onde entra | O que demonstra |
-|---|---|---|
-| **Paciente** | `dashboard.html` | Agendamento, sala de consulta, prontuário, receitas, LGPD |
-| **Profissional** | `medico.html` | Agenda do dia, fila de risco, atendimento, registro clínico |
-| **Gestor** | `admin.html` | Indicadores, gráficos, metas e relatórios da Secretaria |
+| Perfil | Como entrar | Senha | Onde cai |
+|---|---|---|---|
+| **Paciente** | CPF `072.418.339-61` | `demo1234` | `dashboard.html` |
+| **Médica (clínica geral)** | "Sou profissional" → `helena.burigo` | `demo1234` | `medico.html` |
+| **Gestor** | "Sou profissional" → `gestao.saude` | `demo1234` | `admin.html` |
+
+Na tela de login, "Contas de demonstração" preenche esses dados com um toque.
+
+Também é possível **criar uma conta nova** (aba "Criar conta") ou usar o botão
+**Entrar com gov.br** — este é uma simulação visual do login do Governo
+Federal (um protótipo estático não pode integrar com o gov.br de verdade).
+
+### Regra de agendamento
+
+O paciente **só agenda com clínico geral** (página `agendar.html`, em 3
+passos: motivo → dia e horário → confirmar). Consultas com especialistas
+existem apenas por **encaminhamento**: o clínico geral marca a consulta pela
+agenda do dia ou de dentro da sala de atendimento (botão "Encaminhar"), e o
+paciente recebe o aviso e vê a consulta em "Minhas consultas".
 
 ---
 
@@ -53,22 +68,26 @@ preenchidos (`demo1234`) — qualquer valor é aceito.
    nos marcadores. Clique em **Libras** na barra superior para ativar o VLibras.
 2. **Botão flutuante "Cris"** — faça a triagem: *Estou com dor → Peito*. Ela
    classifica o risco como alto e manda procurar o SAMU. Depois refaça com
-   *Cabeça* e clique em **Agendar Clínica Médica**.
-3. **Acesso como Paciente** — o painel mostra a consulta de hoje com contagem
-   regressiva.
-4. **"Entrar na sala agora"** — permita a câmera quando o navegador pedir.
+   *Cabeça* e clique em **Agendar com clínico geral**.
+3. **Acesso como Paciente** (de preferência no celular) — o Início mostra a
+   consulta de hoje com contagem regressiva. Toque em **Agendar** na barra
+   inferior e marque uma consulta em 3 passos.
+4. **"Entrar na consulta agora"** — permita a câmera quando o navegador pedir.
    **A sua câmera liga de verdade.** Mostre o mudo, o desligar câmera e o
    **compartilhar tela**. Mande uma mensagem no chat. Encerre a chamada.
 5. **Prontuário e Exames** — aba *Receitas digitais*: aponte o celular para o
    **QR Code**, ele é real. Clique em *Imprimir receita*.
 6. **Perfil e LGPD** — mostre os consentimentos, *Quem acessou meu prontuário* e
    *Baixar todos os meus dados*.
-7. **Sair → entrar como Gestor** — painel de indicadores, os gráficos animam ao
+7. **Sair → entrar como Médica** — na agenda do dia, toque em **Encaminhar** no
+   paciente Artur e marque um especialista. Entre de novo como paciente: a
+   consulta aparece em "Minhas consultas" com a etiqueta *Encaminhamento*.
+8. **Sair → entrar como Gestor** — painel de indicadores, os gráficos animam ao
    carregar. Clique em *Relatório gerencial*.
-8. **`sobre.html`** — cada entregável do Termo de Abertura ligado à tela que o
+9. **`sobre.html`** — cada entregável do Termo de Abertura ligado à tela que o
    implementa.
 
-Se precisar zerar a demonstração: **Perfil → Apagar meus dados de demonstração**.
+Se precisar zerar a demonstração: **Meu perfil → Privacidade → Restaurar dados da demonstração**.
 
 ---
 
@@ -76,9 +95,10 @@ Se precisar zerar a demonstração: **Perfil → Apagar meus dados de demonstra�
 
 ```
 index.html          Portal público (landing institucional)
-acesso.html         Login e cadastro, com os três perfis
+acesso.html         Login (CPF, gov.br simulado, equipe) e cadastro
 dashboard.html      Painel do paciente
-consultas.html      Agendamento, histórico e agenda do mês
+agendar.html        Agendamento (somente clínico geral, 3 passos)
+consultas.html      Próximas consultas e histórico
 teleconsulta.html   Sala virtual — vídeo, áudio, chat, compartilhar tela
 prontuarios.html    Prontuário, exames e receitas digitais
 perfil.html         Dados cadastrais e central de privacidade (LGPD)
@@ -93,6 +113,7 @@ assets/css/
   components.css    Botões, cards, formulários, modais, tabelas
   layout.css        Barra de acessibilidade, navbar, sidebar, rodapé
   pages.css         Estilos por página
+  paciente.css      Área do paciente e acesso (mobile-first)
 
 assets/js/
   icons.js          Biblioteca de ícones SVG própria (sem CDN)

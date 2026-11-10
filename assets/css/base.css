@@ -732,3 +732,14 @@ p {
     background: #fff;
   }
 }
+
+/* o atributo hidden sempre vence (componentes com display:flex/grid o ignoravam) */
+[hidden] {
+  display: none !important;
+}
+
+/* animações de entrada lateral (reveal-left/right) não podem gerar rolagem
+   horizontal no celular; "clip" não quebra a topbar fixa (sticky) */
+html {
+  overflow-x: clip;
+}

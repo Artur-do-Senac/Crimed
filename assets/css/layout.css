@@ -755,3 +755,152 @@
   margin-top: 0.2rem;
   display: block;
 }
+
+/* ======================================================================
+   AJUSTES DO SHELL (v2) — usuário conectado, destaque "Agendar consulta",
+   utilitários de visibilidade e topbar compacta no celular
+   ====================================================================== */
+.hide-mobile {
+}
+@media (max-width: 760px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* item de menu em destaque (Agendar consulta) */
+.side-link-cta {
+  background: var(--green-300);
+  color: var(--green-900);
+  margin: 0.35rem 0 0.5rem;
+  font-weight: 750;
+}
+.side-link-cta .ico {
+  color: var(--green-900);
+  opacity: 1;
+}
+.side-link-cta:hover {
+  background: #9bd384;
+  color: var(--green-900);
+}
+.side-link-cta.is-active {
+  background: #fff;
+  color: var(--green-900);
+}
+.side-link-cta.is-active .ico {
+  color: var(--green-800);
+}
+
+/* usuário conectado na topbar */
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.25rem 0.25rem 0.6rem;
+  border-radius: var(--r-full);
+  transition: background 0.2s var(--ease);
+  min-width: 0;
+}
+.topbar-user:hover {
+  background: var(--surface-2);
+}
+.topbar-user-nome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+  min-width: 0;
+}
+.topbar-user-nome strong {
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 14ch;
+}
+.topbar-user-nome small {
+  font-size: 0.68rem;
+  color: var(--text-mute);
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .app-topbar {
+    padding: 0.6rem 0.85rem;
+    padding-top: max(0.6rem, env(safe-area-inset-top));
+    gap: 0.5rem;
+  }
+  .app-topbar h1 {
+    font-size: var(--t-lg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .app-topbar > .row {
+    min-width: 0;
+    gap: 0.4rem !important;
+  }
+  .app-topbar > .row > div {
+    min-width: 0;
+  }
+  .topbar-sub {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topbar-actions {
+    gap: 0.15rem;
+    flex-shrink: 0;
+  }
+  .topbar-actions > .btn {
+    padding: 0.45rem 0.6rem;
+  }
+  .topbar-user-nome {
+    display: none;
+  }
+  .topbar-user {
+    padding: 0.15rem;
+  }
+  .app-content {
+    padding: 1rem 0.9rem 1.5rem;
+  }
+  .card-pad-lg {
+    padding: 1.15rem;
+  }
+  .card-head {
+    flex-wrap: wrap;
+  }
+}
+
+/* inputs com 16px no celular: evita o zoom automático do iPhone ao tocar */
+@media (max-width: 760px) {
+  .input,
+  .field input:not([type="checkbox"]):not([type="radio"]),
+  .field select,
+  .field textarea {
+    font-size: 16px;
+  }
+}
+
+/* indicadores (médico e gestor) em 2 colunas compactas no celular */
+@media (max-width: 760px) {
+  .auto-grid:has(> .kpi) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.7rem !important;
+  }
+  .auto-grid > .kpi {
+    padding: 0.9rem;
+  }
+  .auto-grid > .kpi .kpi-value {
+    font-size: 1.55rem;
+  }
+  .auto-grid > .kpi .kpi-label {
+    font-size: 0.66rem;
+  }
+  .auto-grid > .kpi .icon-bubble-sm {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+}

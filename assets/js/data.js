@@ -6,7 +6,7 @@
 (function (global) {
   "use strict";
 
-  var SEED_VERSION = "crimed.v3";
+  var SEED_VERSION = "crimed.v4";
   var K = {
     consultas: SEED_VERSION + ".consultas",
     perfil: SEED_VERSION + ".perfil",
@@ -18,6 +18,7 @@
     sessao: SEED_VERSION + ".sessao",
     prefs: SEED_VERSION + ".prefs",
     lgpd: SEED_VERSION + ".lgpd",
+    usuarios: SEED_VERSION + ".usuarios",
   };
 
   /* ------------------------------------------------------------ utilitários */
@@ -134,6 +135,39 @@
       bio: "Dermatologista. Teledermatologia e rastreio de lesões de pele.",
     },
     {
+      id: "med-9",
+      nome: "Dr. Paulo Rovaris",
+      especialidade: "Clínica Médica",
+      crm: "CRM/SC 17.865",
+      unidade: "ubs-prospera",
+      nota: 4.8,
+      atendimentos: 1876,
+      horarios: ["07:30", "08:10", "08:50", "09:30", "10:10", "13:00", "13:40", "14:20", "15:00", "15:40"],
+      bio: "Clínico geral, médico de família e comunidade na UBS Próspera.",
+    },
+    {
+      id: "med-10",
+      nome: "Dra. Camila Tasca",
+      especialidade: "Clínica Médica",
+      crm: "CRM/SC 21.402",
+      unidade: "ubs-riomaina",
+      nota: 4.9,
+      atendimentos: 1102,
+      horarios: ["08:15", "09:00", "09:45", "10:30", "13:15", "14:00", "14:45", "15:30", "16:15"],
+      bio: "Clínica geral com foco em saúde da mulher e acompanhamento de crônicos.",
+    },
+    {
+      id: "med-11",
+      nome: "Dr. Lucas Bortolotto",
+      especialidade: "Clínica Médica",
+      crm: "CRM/SC 23.019",
+      unidade: "ubs-santaluzia",
+      nota: 4.7,
+      atendimentos: 864,
+      horarios: ["08:00", "08:45", "09:30", "10:15", "11:00", "13:30", "14:15", "15:00", "16:30"],
+      bio: "Clínico geral, atenção primária e saúde do idoso.",
+    },
+    {
       id: "med-8",
       nome: "Enf. Patrícia Nandi",
       especialidade: "Enfermagem / Triagem",
@@ -158,82 +192,143 @@
   ];
 
   /* ------------------------------------------------------------- USUÁRIOS */
-  var USUARIOS = {
-    paciente: {
-      id: "u-pac-1",
-      nome: "Artur Seixas Pedro",
-      papel: "paciente",
-      papelLabel: "Paciente",
-      cpf: "072.418.339-55",
-      cns: "708 4051 8829 0014",
-      nascimento: "2004-03-12",
-      telefone: "(48) 99812-4470",
-      email: "artur@telesaude.criciuma.sc.gov.br",
-      endereco: "Rua Coronel Pedro Benedet, 190 — Centro, Criciúma/SC",
-      unidade: "ubs-centro",
-      tipoSanguineo: "O+",
-      alergias: "Dipirona",
-      condicoes: "Rinite alérgica",
-      home: "dashboard.html",
-    },
-    medico: {
-      id: "med-4",
-      nome: "Dra. Helena Búrigo",
-      papel: "medico",
-      papelLabel: "Profissional de Saúde",
-      cpf: "—",
-      crm: "CRM/SC 15.320",
-      especialidade: "Clínica Médica",
-      unidade: "ubs-centro",
-      email: "helena.burigo@criciuma.sc.gov.br",
-      home: "medico.html",
-    },
-    admin: {
-      id: "u-adm-1",
-      nome: "Gestão Municipal de Saúde",
-      papel: "admin",
-      papelLabel: "Administrador",
-      cargo: "Secretaria Municipal de Saúde",
-      unidade: "ubs-centro",
-      email: "gestao.saude@criciuma.sc.gov.br",
-      home: "admin.html",
-    },
+  /*
+   * Contas de demonstração. As senhas são guardadas apenas como hash (ver
+   * hashSenha). Todas usam a senha "demo1234".
+   *   · Paciente  → CPF 072.418.339-61
+   *   · Médico    → usuário helena.burigo  (ou CPF 483.915.270-50)
+   *   · Gestor    → usuário gestao.saude
+   */
+  var PACIENTE_DEMO = "u-pac-1";
+
+  var PAPEIS = {
+    paciente: { label: "Paciente", home: "dashboard.html" },
+    medico: { label: "Profissional de Saúde", home: "medico.html" },
+    admin: { label: "Gestor(a)", home: "admin.html" },
   };
 
-  /* ------------------------------------------------------------- CONSULTAS */
-  function seedConsultas() {
+  function seedUsuarios() {
+    var senha = hashSenha("demo1234");
     return [
       {
+        id: PACIENTE_DEMO,
+        papel: "paciente",
+        nome: "Artur Seixas Pedro",
+        cpf: "072.418.339-61",
+        cns: "708 4051 8829 0014",
+        nascimento: "2004-03-12",
+        telefone: "(48) 99812-4470",
+        email: "artur@exemplo.com.br",
+        endereco: "Rua Coronel Pedro Benedet, 190 — Centro, Criciúma/SC",
+        unidade: "ubs-centro",
+        tipoSanguineo: "O+",
+        alergias: "Dipirona",
+        condicoes: "Rinite alérgica",
+        senha: senha,
+        origem: "portal",
+      },
+      {
+        id: "med-4",
+        papel: "medico",
+        nome: "Dra. Helena Búrigo",
+        login: "helena.burigo",
+        cpf: "483.915.270-50",
+        crm: "CRM/SC 15.320",
+        especialidade: "Clínica Médica",
+        unidade: "ubs-centro",
+        email: "helena.burigo@criciuma.sc.gov.br",
+        senha: senha,
+      },
+      {
+        id: "u-adm-1",
+        papel: "admin",
+        nome: "Gestão Municipal de Saúde",
+        login: "gestao.saude",
+        cpf: "315.662.048-36",
+        cargo: "Secretaria Municipal de Saúde",
+        unidade: "ubs-centro",
+        email: "gestao.saude@criciuma.sc.gov.br",
+        senha: senha,
+      },
+    ];
+  }
+
+  /* Hash simples (djb2) — suficiente para um protótipo que roda só no
+     navegador; um sistema real usaria bcrypt/argon2 no servidor. */
+  function hashSenha(s) {
+    var str = "crimed$" + String(s || "");
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+    return "h" + (h >>> 0).toString(36);
+  }
+
+  function soDigitos(s) {
+    return String(s || "").replace(/\D/g, "");
+  }
+
+  /** Valida CPF pelos dígitos verificadores (rejeita sequências repetidas). */
+  function validarCPF(cpf) {
+    var d = soDigitos(cpf);
+    if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+    for (var t = 9; t < 11; t++) {
+      var soma = 0;
+      for (var i = 0; i < t; i++) soma += Number(d[i]) * (t + 1 - i);
+      var dv = ((soma * 10) % 11) % 10;
+      if (dv !== Number(d[t])) return false;
+    }
+    return true;
+  }
+
+  function formatarCPF(cpf) {
+    var d = soDigitos(cpf);
+    return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  }
+
+  /* ------------------------------------------------------------- CONSULTAS */
+  /*
+   * Regra de negócio: o paciente agenda SOMENTE com clínico geral
+   * (Clínica Médica). Consultas com especialistas existem apenas por
+   * encaminhamento feito pelo clínico — campo "encaminhadoPor".
+   */
+  function seedConsultas() {
+    var enc = { encaminhadoPor: "Dra. Helena Búrigo", encaminhadoPorId: "med-4" };
+    function c(o) {
+      var base = {
+        pacienteId: PACIENTE_DEMO,
+        paciente: "Artur Seixas Pedro",
+        resumo: "",
+        conduta: "",
+        anamnese: "",
+      };
+      for (var k in o) base[k] = o[k];
+      return base;
+    }
+    return [
+      c({
         id: 1001,
-        medicoId: "med-2",
-        medico: "Dr. Fernando Silva",
-        especialidade: "Cardiologia",
-        unidade: "ubs-prospera",
+        medicoId: "med-4",
+        medico: "Dra. Helena Búrigo",
+        especialidade: "Clínica Médica",
+        unidade: "ubs-centro",
         data: dayOffset(0),
         hora: proximaHoraCheia(),
         status: "Confirmada",
         motivo: "Retorno — controle de pressão arterial",
-        resumo: "",
-        conduta: "",
-        anamnese: "",
-        paciente: "Artur Seixas Pedro",
-      },
-      {
+      }),
+      c({
         id: 1002,
-        medicoId: "med-5",
-        medico: "Dra. Marina Zanette",
-        especialidade: "Psicologia",
-        unidade: "ubs-santaluzia",
+        medicoId: "med-2",
+        medico: "Dr. Fernando Silva",
+        especialidade: "Cardiologia",
+        unidade: "ubs-prospera",
         data: dayOffset(6),
-        hora: "15:00",
+        hora: "15:10",
         status: "Confirmada",
-        motivo: "Acompanhamento — ansiedade",
-        resumo: "",
-        conduta: "",
-        anamnese: "",
-        paciente: "Artur Seixas Pedro",
-      },
-      {
+        motivo: "Avaliação cardiológica — pressão arterial elevada",
+        encaminhadoPor: enc.encaminhadoPor,
+        encaminhadoPorId: enc.encaminhadoPorId,
+      }),
+      c({
         id: 1003,
         medicoId: "med-1",
         medico: "Dra. Vanessa Costa",
@@ -243,6 +338,8 @@
         hora: "10:00",
         status: "Realizada",
         motivo: "Cefaleia recorrente",
+        encaminhadoPor: enc.encaminhadoPor,
+        encaminhadoPorId: enc.encaminhadoPorId,
         anamnese:
           "Paciente relata episódios de cefaleia pulsátil há cerca de 3 meses, com frequência de 2 a 3 vezes por semana, predominantemente no período vespertino. Nega aura visual. Refere piora com privação de sono e telas.",
         resumo:
@@ -250,9 +347,8 @@
         conduta:
           "Higiene do sono, redução do tempo de tela à noite e diário de cefaleia. Analgésico em crise. Retorno em 6 meses ou antes se piora.",
         nota: 5,
-        paciente: "Artur Seixas Pedro",
-      },
-      {
+      }),
+      c({
         id: 1004,
         medicoId: "med-3",
         medico: "Dr. Carlos Mendes",
@@ -262,6 +358,8 @@
         hora: "09:00",
         status: "Realizada",
         motivo: "Dor lombar",
+        encaminhadoPor: enc.encaminhadoPor,
+        encaminhadoPorId: enc.encaminhadoPorId,
         anamnese:
           "Lombalgia mecânica há 4 semanas, sem irradiação para membros inferiores. Trabalha sentado por longos períodos.",
         resumo:
@@ -269,9 +367,8 @@
         conduta:
           "Encaminhamento para fisioterapia (10 sessões), orientação postural e alongamentos diários. Anti-inflamatório por 5 dias.",
         nota: 4,
-        paciente: "Artur Seixas Pedro",
-      },
-      {
+      }),
+      c({
         id: 1005,
         medicoId: "med-4",
         medico: "Dra. Helena Búrigo",
@@ -288,9 +385,8 @@
         conduta:
           "Solicitado hemograma completo e glicemia de jejum. Manter atividade física e alimentação equilibrada.",
         nota: 5,
-        paciente: "Artur Seixas Pedro",
-      },
-      {
+      }),
+      c({
         id: 1006,
         medicoId: "med-7",
         medico: "Dra. Juliana Pasqualli",
@@ -300,11 +396,9 @@
         hora: "14:40",
         status: "Cancelada",
         motivo: "Avaliação de lesão de pele",
-        resumo: "",
-        conduta: "",
-        anamnese: "",
-        paciente: "Artur Seixas Pedro",
-      },
+        encaminhadoPor: enc.encaminhadoPor,
+        encaminhadoPorId: enc.encaminhadoPorId,
+      }),
     ];
   }
 
@@ -324,6 +418,7 @@
   function seedExames() {
     return [
       {
+        pacienteId: "u-pac-1",
         id: "ex-1",
         nome: "Hemograma completo",
         tipo: "Laboratorial",
@@ -340,6 +435,7 @@
         ],
       },
       {
+        pacienteId: "u-pac-1",
         id: "ex-2",
         nome: "Glicemia de jejum",
         tipo: "Laboratorial",
@@ -354,6 +450,7 @@
         ],
       },
       {
+        pacienteId: "u-pac-1",
         id: "ex-3",
         nome: "Eletrocardiograma (ECG)",
         tipo: "Imagem / Gráfico",
@@ -369,6 +466,7 @@
         ],
       },
       {
+        pacienteId: "u-pac-1",
         id: "ex-4",
         nome: "Raio-X de coluna lombar",
         tipo: "Imagem",
@@ -380,6 +478,7 @@
         itens: [{ k: "Laudo", v: "Retificação da lordose", ref: "—", ok: false }],
       },
       {
+        pacienteId: "u-pac-1",
         id: "ex-5",
         nome: "Perfil lipídico",
         tipo: "Laboratorial",
@@ -397,6 +496,7 @@
   function seedReceitas() {
     return [
       {
+        pacienteId: "u-pac-1",
         id: "rec-1",
         codigo: "CRM-2026-8F4A-2291",
         medico: "Dra. Vanessa Costa",
@@ -423,6 +523,7 @@
           "Suspender dipirona em caso de reação alérgica e procurar atendimento.",
       },
       {
+        pacienteId: "u-pac-1",
         id: "rec-2",
         codigo: "CRM-2026-1C7E-5540",
         medico: "Dr. Carlos Mendes",
@@ -449,16 +550,29 @@
     return [
       {
         id: "n-1",
+        usuarioId: PACIENTE_DEMO,
         tipo: "consulta",
-        titulo: "Teleconsulta hoje",
+        titulo: "Consulta hoje",
         texto:
-          "Sua consulta de Cardiologia com Dr. Fernando Silva acontece hoje. A sala virtual abre 15 minutos antes.",
+          "Sua consulta com a Dra. Helena Búrigo (clínica geral) é hoje. A sala abre 15 minutos antes.",
         quando: "Agora há pouco",
         lida: false,
         link: "consultas.html",
       },
       {
+        id: "n-0",
+        usuarioId: PACIENTE_DEMO,
+        tipo: "consulta",
+        titulo: "Você foi encaminhado para Cardiologia",
+        texto:
+          "A Dra. Helena Búrigo marcou sua consulta com o Dr. Fernando Silva. Veja a data em Minhas consultas.",
+        quando: "Há 1 dia",
+        lida: false,
+        link: "consultas.html",
+      },
+      {
         id: "n-2",
+        usuarioId: PACIENTE_DEMO,
         tipo: "exame",
         titulo: "Resultado de exame disponível",
         texto: "O laudo do seu Eletrocardiograma (ECG) já pode ser consultado.",
@@ -468,23 +582,24 @@
       },
       {
         id: "n-3",
+        usuarioId: PACIENTE_DEMO,
         tipo: "receita",
         titulo: "Receita digital emitida",
         texto:
           "Dra. Vanessa Costa emitiu uma receita digital. Válida em todas as farmácias credenciadas.",
         quando: "Há 5 dias",
-        lida: false,
+        lida: true,
         link: "prontuarios.html#receitas",
       },
       {
-        id: "n-4",
-        tipo: "campanha",
-        titulo: "Campanha de vacinação — Criciúma",
-        texto:
-          "A vacinação contra Influenza está disponível em todas as UBS do município até o fim do mês.",
-        quando: "Há 1 semana",
-        lida: true,
-        link: "#",
+        id: "n-m1",
+        usuarioId: "med-4",
+        tipo: "sistema",
+        titulo: "Agenda de hoje publicada",
+        texto: "Seus atendimentos de hoje já estão disponíveis na Agenda do Dia.",
+        quando: "Hoje",
+        lida: false,
+        link: "medico.html",
       },
     ];
   }
@@ -494,6 +609,7 @@
     return [
       {
         id: "f-1",
+        pacienteId: "u-pac-1",
         paciente: "Artur Seixas Pedro",
         idade: 22,
         unidade: "ubs-centro",
@@ -592,6 +708,12 @@
   };
 
   /* ------------------------------------------- TRIAGEM DA ASSISTENTE "CRIS" */
+  /* Toda ação de agendamento leva ao clínico geral — é ele quem encaminha
+     para o especialista quando necessário. */
+  function agendarClinico(motivo) {
+    return { motivo: motivo, label: "Agendar com clínico geral" };
+  }
+
   var TRIAGEM = {
     inicio: {
       texto:
@@ -624,23 +746,23 @@
     },
     dor_peito_leve: {
       texto:
-        "Mesmo assim vale uma avaliação. Vou sugerir uma <strong>teleconsulta com Cardiologia</strong> com prioridade.",
+        "Mesmo assim vale uma avaliação logo. Marque uma consulta com o <strong>clínico geral</strong>: se for preciso, ele mesmo te encaminha para o cardiologista.",
       risco: "amarelo",
-      acao: { especialidade: "Cardiologia", label: "Agendar Cardiologia" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     dor_cabeca: {
       texto:
-        "Dores de cabeça recorrentes merecem avaliação. A <strong>Clínica Médica</strong> faz a primeira avaliação e encaminha para Neurologia se necessário.",
+        "Dores de cabeça recorrentes merecem avaliação. O <strong>clínico geral</strong> faz a primeira consulta e, se precisar, encaminha você para o neurologista.",
       risco: "verde",
-      acao: { especialidade: "Clínica Médica", label: "Agendar Clínica Médica" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     dor_coluna: {
       texto:
-        "Dor na coluna geralmente é avaliada pela <strong>Ortopedia</strong>. Enquanto aguarda: evite peso, mantenha-se ativo e cuide da postura.",
+        "Enquanto aguarda: evite carregar peso, mantenha-se ativo e cuide da postura. O <strong>clínico geral</strong> avalia e, se necessário, encaminha para a ortopedia.",
       risco: "verde",
-      acao: { especialidade: "Ortopedia", label: "Agendar Ortopedia" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     febre: {
@@ -652,30 +774,31 @@
     },
     febre_curta: {
       texto:
-        "Mantenha hidratação e repouso. Se surgir <strong>falta de ar, confusão mental ou febre acima de 39 °C</strong>, procure atendimento imediato. A triagem com Enfermagem pode te orientar hoje mesmo.",
+        "Mantenha hidratação e repouso. Se surgir <strong>falta de ar, confusão mental ou febre acima de 39 °C</strong>, procure atendimento imediato. Se quiser, já pode marcar uma consulta com o clínico geral.",
       risco: "verde",
-      acao: { especialidade: "Enfermagem / Triagem", label: "Agendar triagem" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     febre_longa: {
       texto:
-        "Febre por mais de 3 dias precisa de avaliação médica. Vou priorizar uma <strong>teleconsulta de Clínica Médica</strong>.",
+        "Febre por mais de 3 dias precisa de avaliação médica. Marque uma consulta com o <strong>clínico geral</strong> o quanto antes.",
       risco: "amarelo",
-      acao: { especialidade: "Clínica Médica", label: "Agendar Clínica Médica" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     receita: {
       texto:
-        "Você pode solicitar a renovação direto pelo portal. Receitas de uso contínuo são renovadas pelo profissional que acompanha seu caso, sem precisar ir à UBS.",
+        "Para renovar uma receita, marque uma consulta com o clínico geral escolhendo o motivo <strong>“Renovar receita”</strong>. Suas receitas atuais ficam no prontuário.",
       risco: "verde",
+      acao: agendarClinico("Renovar receita"),
       link: { href: "prontuarios.html#receitas", label: "Ver minhas receitas" },
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     emocional: {
       texto:
-        "Que bom que você procurou ajuda — isso já é um passo importante. A rede municipal oferece <strong>atendimento psicológico por teleconsulta</strong>. Se você estiver em sofrimento intenso agora, ligue <strong>188 (CVV)</strong>, disponível 24h e gratuito.",
+        "Que bom que você procurou ajuda — isso já é um passo importante. O <strong>clínico geral</strong> pode te ouvir e encaminhar para o atendimento psicológico da rede. Se você estiver em sofrimento intenso agora, ligue <strong>188 (CVV)</strong>, 24h e gratuito.",
       risco: "amarelo",
-      acao: { especialidade: "Psicologia", label: "Agendar Psicologia" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     exame: {
@@ -687,9 +810,9 @@
     },
     generico: {
       texto:
-        "Para sintomas gerais, a <strong>Clínica Médica</strong> é a porta de entrada. O profissional avalia e encaminha para a especialidade certa.",
+        "Para qualquer sintoma, o <strong>clínico geral</strong> é a porta de entrada. Ele avalia e, se precisar, encaminha para a especialidade certa.",
       risco: "verde",
-      acao: { especialidade: "Clínica Médica", label: "Agendar Clínica Médica" },
+      acao: agendarClinico("Estou com sintomas"),
       opcoes: [{ label: "Começar de novo", proximo: "inicio" }],
     },
     fim_urgencia: {
@@ -718,22 +841,75 @@
     }
   }
 
+  /* — escopo por usuário —
+     Um paciente só enxerga os próprios registros. Profissionais e gestão
+     enxergam a base inteira (necessário para a agenda e os prontuários). */
+  function sessaoBruta() {
+    return read(K.sessao, null);
+  }
+  function usuarioBruto(id) {
+    return read(K.usuarios, []).filter(function (u) {
+      return u.id === id;
+    })[0];
+  }
+  function pacienteLogadoId() {
+    var s = sessaoBruta();
+    if (!s) return null;
+    var u = usuarioBruto(s.id);
+    return u && u.papel === "paciente" ? u.id : null;
+  }
+  function dono(item, campo) {
+    return item[campo] || PACIENTE_DEMO;
+  }
+  function lerEscopo(key, campo, uid) {
+    var todos = read(key, []);
+    if (!uid) return todos;
+    return todos.filter(function (x) {
+      return dono(x, campo) === uid;
+    });
+  }
+  function salvarEscopo(key, campo, uid, lista) {
+    if (!uid) return write(key, lista);
+    var outros = read(key, []).filter(function (x) {
+      return dono(x, campo) !== uid;
+    });
+    lista.forEach(function (x) {
+      if (!x[campo]) x[campo] = uid;
+    });
+    return write(key, outros.concat(lista));
+  }
+
+  /** Remove a senha e acrescenta rótulo e página inicial do papel. */
+  function publico(u) {
+    if (!u) return null;
+    var o = {};
+    for (var k in u) if (k !== "senha") o[k] = u[k];
+    var p = PAPEIS[u.papel] || PAPEIS.paciente;
+    o.papelLabel = p.label;
+    o.home = p.home;
+    return o;
+  }
+
   var DB = {
     keys: K,
     unidades: UNIDADES,
     medicos: MEDICOS,
     especialidades: ESPECIALIDADES,
-    usuarios: USUARIOS,
     metricas: METRICAS,
     triagem: TRIAGEM,
+    papeis: PAPEIS,
+    pacienteDemo: PACIENTE_DEMO,
 
     dayOffset: dayOffset,
     hoje: hoje,
     iso: iso,
+    validarCPF: validarCPF,
+    formatarCPF: formatarCPF,
+    soDigitos: soDigitos,
 
     init: function () {
+      if (!localStorage.getItem(K.usuarios)) write(K.usuarios, seedUsuarios());
       if (!localStorage.getItem(K.consultas)) write(K.consultas, seedConsultas());
-      if (!localStorage.getItem(K.perfil)) write(K.perfil, USUARIOS.paciente);
       if (!localStorage.getItem(K.exames)) write(K.exames, seedExames());
       if (!localStorage.getItem(K.receitas)) write(K.receitas, seedReceitas());
       if (!localStorage.getItem(K.notificacoes))
@@ -749,6 +925,7 @@
      * Consultas confirmadas que ficaram para trás são trazidas para hoje/amanhã,
      * e a receita de exemplo continua dentro da validade. Sem isso, um protótipo
      * semeado ontem mostraria a consulta de hoje como atrasada.
+     * (Só mexe nos dados do paciente de demonstração.)
      */
     rejuvenescer: function () {
       var hj = hoje();
@@ -756,7 +933,7 @@
 
       var consultas = read(K.consultas, []);
       var atrasadas = consultas.filter(function (c) {
-        return c.status === "Confirmada" && c.data < hj;
+        return c.status === "Confirmada" && c.data < hj && dono(c, "pacienteId") === PACIENTE_DEMO;
       });
       atrasadas.forEach(function (c, i) {
         c.data = i === 0 ? hj : dayOffset(i * 3);
@@ -765,7 +942,6 @@
       });
       if (mudou) write(K.consultas, consultas);
 
-      /* a receita vigente acompanha a data atual */
       var receitas = read(K.receitas, []);
       var vigente = receitas[0];
       if (vigente && vigente.validade < hj) {
@@ -773,7 +949,6 @@
         write(K.receitas, receitas);
       }
 
-      /* o exame ainda não liberado permanece no futuro próximo */
       var exames = read(K.exames, []);
       var pendente = exames.filter(function (e) { return e.status === "Aguardando"; })[0];
       if (pendente && pendente.data < hj) {
@@ -781,10 +956,9 @@
         write(K.exames, exames);
       }
 
-      /* a fila de espera espelha o horário da consulta de hoje */
       var fila = read(K.fila, []);
       var primeira = consultas.filter(function (c) {
-        return c.status === "Confirmada" && c.data === hj;
+        return c.status === "Confirmada" && c.data === hj && dono(c, "pacienteId") === PACIENTE_DEMO;
       })[0];
       if (fila[0] && primeira) {
         fila[0].hora = primeira.hora;
@@ -801,11 +975,200 @@
       DB.init();
     },
 
+    /* =========================================================== CONTAS */
+    usuarios: function () {
+      return read(K.usuarios, []).map(publico);
+    },
+    usuario: function (id) {
+      return publico(usuarioBruto(id));
+    },
+
+    /** Localiza uma conta por CPF, Cartão SUS, usuário institucional ou e-mail. */
+    buscarConta: function (identificador) {
+      var txt = String(identificador || "").trim().toLowerCase();
+      if (!txt) return null;
+      var dig = soDigitos(txt);
+      var temLetra = /[a-z]/.test(txt);
+      return read(K.usuarios, []).filter(function (u) {
+        if (!temLetra && dig.length === 11 && soDigitos(u.cpf) === dig) return true;
+        if (!temLetra && dig.length === 15 && soDigitos(u.cns) === dig) return true;
+        if (u.login && u.login.toLowerCase() === txt) return true;
+        if (u.email && u.email.toLowerCase() === txt) return true;
+        return false;
+      })[0] || null;
+    },
+
+    cpfCadastrado: function (cpf) {
+      var d = soDigitos(cpf);
+      return read(K.usuarios, []).some(function (u) {
+        return soDigitos(u.cpf) === d;
+      });
+    },
+
+    /**
+     * Confere credenciais.
+     * @returns {{ok:boolean, usuario?:object, erro?:string, campo?:string}}
+     */
+    autenticar: function (identificador, senha) {
+      var txt = String(identificador || "").trim();
+      if (!txt) return { ok: false, campo: "usuario", erro: "Informe seu CPF." };
+      var dig = soDigitos(txt);
+      var pareceCPF = !/[a-z@]/i.test(txt);
+      if (pareceCPF && dig.length !== 11 && dig.length !== 15) {
+        return { ok: false, campo: "usuario", erro: "O CPF precisa ter 11 números." };
+      }
+      if (pareceCPF && dig.length === 11 && !validarCPF(dig)) {
+        return { ok: false, campo: "usuario", erro: "Este CPF não é válido. Confira os números." };
+      }
+      if (!senha) return { ok: false, campo: "senha", erro: "Digite sua senha." };
+      var u = DB.buscarConta(txt);
+      if (!u) {
+        return {
+          ok: false,
+          campo: "usuario",
+          naoEncontrado: true,
+          erro: pareceCPF
+            ? "Não encontramos uma conta com este CPF. Toque em “Criar conta”."
+            : "Usuário não encontrado.",
+        };
+      }
+      if (u.senha !== hashSenha(senha)) {
+        return { ok: false, campo: "senha", erro: "Senha incorreta. Tente novamente." };
+      }
+      return { ok: true, usuario: publico(u) };
+    },
+
+    /**
+     * Cria uma conta de paciente após validar os dados.
+     * @returns {{ok:boolean, usuario?:object, erro?:string, campo?:string}}
+     */
+    cadastrar: function (d) {
+      d = d || {};
+      var nome = String(d.nome || "").trim().replace(/\s+/g, " ");
+      if (nome.split(" ").length < 2 || nome.length < 5) {
+        return { ok: false, campo: "nome", erro: "Digite seu nome completo (nome e sobrenome)." };
+      }
+      if (!validarCPF(d.cpf)) {
+        return { ok: false, campo: "cpf", erro: "CPF inválido. Confira os 11 números." };
+      }
+      if (DB.cpfCadastrado(d.cpf)) {
+        return { ok: false, campo: "cpf", existe: true, erro: "Já existe uma conta com este CPF. Use a opção “Entrar”." };
+      }
+      if (d.nascimento) {
+        var nasc = new Date(d.nascimento + "T12:00:00");
+        var anos = (Date.now() - nasc.getTime()) / 31557600000;
+        if (isNaN(anos) || anos < 0 || anos > 120) {
+          return { ok: false, campo: "nascimento", erro: "Confira a data de nascimento." };
+        }
+      } else {
+        return { ok: false, campo: "nascimento", erro: "Informe sua data de nascimento." };
+      }
+      var tel = soDigitos(d.telefone);
+      if (tel.length < 10 || tel.length > 11) {
+        return { ok: false, campo: "telefone", erro: "Informe o celular com DDD. Ex.: (48) 99999-9999" };
+      }
+      if (!d.unidade || !DB.unidade(d.unidade)) {
+        return { ok: false, campo: "unidade", erro: "Escolha a UBS mais perto da sua casa." };
+      }
+      if (!d.origemGov) {
+        if (String(d.senha || "").length < 8) {
+          return { ok: false, campo: "senha", erro: "A senha precisa ter pelo menos 8 caracteres." };
+        }
+        if (d.senha !== d.confirmacao) {
+          return { ok: false, campo: "confirmacao", erro: "As senhas não são iguais." };
+        }
+      }
+      if (d.simular) return { ok: true };
+      var lista = read(K.usuarios, []);
+      var novo = {
+        id: "u-pac-" + Date.now().toString(36),
+        papel: "paciente",
+        nome: nome,
+        cpf: formatarCPF(d.cpf),
+        cns: String(d.cns || "").trim(),
+        nascimento: d.nascimento,
+        telefone: d.telefone,
+        email: String(d.email || "").trim(),
+        endereco: "",
+        unidade: d.unidade,
+        tipoSanguineo: "",
+        alergias: "",
+        condicoes: "",
+        senha: hashSenha(d.origemGov ? "gov:" + Date.now() : d.senha),
+        origem: d.origemGov ? "gov.br" : "portal",
+        criadoEm: new Date().toISOString(),
+      };
+      lista.push(novo);
+      write(K.usuarios, lista);
+
+      var notifs = read(K.notificacoes, []);
+      notifs.unshift({
+        id: "n-" + Date.now(),
+        usuarioId: novo.id,
+        tipo: "sistema",
+        titulo: "Bem-vindo(a) à Tele-Saúde Criciúma!",
+        texto: "Sua conta foi criada. Para marcar sua primeira consulta, toque em “Agendar consulta”.",
+        quando: "Agora",
+        lida: false,
+        link: "agendar.html",
+      });
+      write(K.notificacoes, notifs);
+      return { ok: true, usuario: publico(novo) };
+    },
+
+    /* =========================================================== SESSÃO */
+    /** Usuário conectado (dados sempre atualizados), ou null. */
+    sessao: function () {
+      var s = sessaoBruta();
+      if (!s || !s.id) return null;
+      return publico(usuarioBruto(s.id));
+    },
+    iniciarSessao: function (u) {
+      write(K.sessao, { id: u.id, desde: new Date().toISOString() });
+      return DB.sessao();
+    },
+    /** Atalho de demonstração: entra com a primeira conta do papel. */
+    entrar: function (papel) {
+      var u = read(K.usuarios, []).filter(function (x) { return x.papel === papel; })[0];
+      return u ? DB.iniciarSessao(u) : null;
+    },
+    sair: function () {
+      localStorage.removeItem(K.sessao);
+    },
+
+    /* =========================================================== PERFIL */
+    /** Perfil do paciente conectado (ou do paciente de demonstração). */
+    perfil: function () {
+      var uid = pacienteLogadoId() || PACIENTE_DEMO;
+      return publico(usuarioBruto(uid)) || publico(seedUsuarios()[0]);
+    },
+    salvarPerfil: function (p) {
+      var lista = read(K.usuarios, []);
+      for (var i = 0; i < lista.length; i++) {
+        if (lista[i].id === p.id) {
+          for (var k in p) {
+            if (k !== "senha" && k !== "papel" && k !== "id" && k !== "cpf" && k !== "home" && k !== "papelLabel") {
+              lista[i][k] = p[k];
+            }
+          }
+        }
+      }
+      write(K.usuarios, lista);
+    },
+    /** Paciente dono de uma consulta (para a visão do profissional). */
+    pacienteDaConsulta: function (c) {
+      var id = c && c.pacienteId ? c.pacienteId : PACIENTE_DEMO;
+      var u = publico(usuarioBruto(id));
+      if (u) return u;
+      return { id: id, nome: (c && c.paciente) || "Paciente", papel: "paciente" };
+    },
+
+    /* ======================================================== CONSULTAS */
     consultas: function () {
-      return read(K.consultas, []);
+      return lerEscopo(K.consultas, "pacienteId", pacienteLogadoId());
     },
     salvarConsultas: function (lista) {
-      write(K.consultas, lista);
+      salvarEscopo(K.consultas, "pacienteId", pacienteLogadoId(), lista);
     },
     consulta: function (id) {
       return DB.consultas().filter(function (c) {
@@ -824,32 +1187,118 @@
       return lista;
     },
 
-    perfil: function () {
-      return read(K.perfil, USUARIOS.paciente);
+    /** Clínicos gerais — os únicos com agenda aberta ao paciente. */
+    clinicosGerais: function () {
+      return MEDICOS.filter(function (m) {
+        return m.especialidade === "Clínica Médica";
+      });
     },
-    salvarPerfil: function (p) {
-      write(K.perfil, p);
+    /** Especialidades que só são acessadas por encaminhamento. */
+    especialidadesEncaminhamento: function () {
+      return ESPECIALIDADES.filter(function (e) {
+        return e !== "Clínica Médica" && e !== "Enfermagem / Triagem";
+      });
     },
 
+    /**
+     * Horários livres de um profissional em uma data. Alguns horários
+     * aparecem como ocupados de forma estável (simula a agenda real).
+     */
+    horariosLivres: function (medicoId, data) {
+      var m = DB.medico(medicoId);
+      if (!m || !data) return [];
+      var ocupados = read(K.consultas, [])
+        .filter(function (c) {
+          return c.medicoId === m.id && c.data === data && c.status === "Confirmada";
+        })
+        .map(function (c) { return c.hora; });
+      var agora = new Date();
+      var ehHoje = data === hoje();
+      return m.horarios.filter(function (h, i) {
+        var pseudo = (data.charCodeAt(9) + i * 7 + m.id.length) % 5 === 0;
+        if (ocupados.indexOf(h) >= 0 || pseudo) return false;
+        if (ehHoje) {
+          var p = h.split(":");
+          var t = new Date();
+          t.setHours(+p[0], +p[1], 0, 0);
+          if (t.getTime() < agora.getTime() + 30 * 60000) return false;
+        }
+        return true;
+      });
+    },
+
+    /**
+     * Encaminhamento: o clínico geral marca a consulta com o especialista.
+     * @param {{pacienteId, paciente, medicoId, data, hora, motivo, prioridade}} d
+     */
+    encaminhar: function (d) {
+      var esp = DB.medico(d.medicoId);
+      var s = DB.sessao();
+      if (!esp || !s) return null;
+      var nova = {
+        id: Date.now(),
+        pacienteId: d.pacienteId,
+        paciente: d.paciente,
+        medicoId: esp.id,
+        medico: esp.nome,
+        especialidade: esp.especialidade,
+        unidade: esp.unidade,
+        data: d.data,
+        hora: d.hora,
+        status: "Confirmada",
+        motivo: d.motivo || "Encaminhamento",
+        prioridade: d.prioridade || "Normal",
+        encaminhadoPor: s.nome,
+        encaminhadoPorId: s.id,
+        encaminhadoEm: new Date().toISOString(),
+        resumo: "",
+        conduta: "",
+        anamnese: "",
+      };
+      var todas = read(K.consultas, []);
+      todas.push(nova);
+      write(K.consultas, todas);
+
+      var notifs = read(K.notificacoes, []);
+      notifs.unshift({
+        id: "n-" + Date.now(),
+        usuarioId: d.pacienteId,
+        tipo: "consulta",
+        titulo: "Você foi encaminhado para " + esp.especialidade,
+        texto:
+          s.nome + " marcou sua consulta com " + esp.nome + " para " +
+          d.data.split("-").reverse().join("/") + " às " + d.hora + ".",
+        quando: "Agora",
+        lida: false,
+        link: "consultas.html",
+      });
+      write(K.notificacoes, notifs);
+      return nova;
+    },
+
+    /* ========================================================== EXAMES */
     exames: function () {
-      return read(K.exames, []);
+      return lerEscopo(K.exames, "pacienteId", pacienteLogadoId());
     },
     salvarExames: function (l) {
-      write(K.exames, l);
+      salvarEscopo(K.exames, "pacienteId", pacienteLogadoId(), l);
     },
 
     receitas: function () {
-      return read(K.receitas, []);
+      return lerEscopo(K.receitas, "pacienteId", pacienteLogadoId());
     },
     salvarReceitas: function (l) {
-      write(K.receitas, l);
+      salvarEscopo(K.receitas, "pacienteId", pacienteLogadoId(), l);
     },
 
+    /* ==================================================== NOTIFICAÇÕES */
     notificacoes: function () {
-      return read(K.notificacoes, []);
+      var s = sessaoBruta();
+      return lerEscopo(K.notificacoes, "usuarioId", s ? s.id : PACIENTE_DEMO);
     },
     salvarNotificacoes: function (l) {
-      write(K.notificacoes, l);
+      var s = sessaoBruta();
+      salvarEscopo(K.notificacoes, "usuarioId", s ? s.id : PACIENTE_DEMO, l);
     },
     naoLidas: function () {
       return DB.notificacoes().filter(function (n) {
@@ -884,19 +1333,6 @@
       var l = DB.avaliacoes();
       l.push(a);
       write(K.avaliacoes, l);
-    },
-
-    sessao: function () {
-      return read(K.sessao, null);
-    },
-    entrar: function (papel) {
-      var u = USUARIOS[papel] || USUARIOS.paciente;
-      if (papel === "paciente") u = DB.perfil();
-      write(K.sessao, u);
-      return u;
-    },
-    sair: function () {
-      localStorage.removeItem(K.sessao);
     },
 
     prefs: function () {

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#208049" />
+    <title>Agendar consulta · CRIMED</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+    <link rel="stylesheet" href="assets/css/paciente.css" />
+  </head>
+
+  <body data-page="agendar">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="app">
+      <aside data-shell="sidebar"></aside>
+      <div class="sidebar-scrim"></div>
+
+      <div class="app-main">
+        <header data-shell="topbar"></header>
+
+        <main class="app-content pac-content" id="conteudo">
+          <div class="ag-wrap">
+            <div class="aviso aviso-warn" id="ag-remarcar" hidden></div>
+
+            <!-- progresso -->
+            <div class="ag-progresso" id="ag-progresso">
+              <div class="ag-steps" aria-hidden="true">
+                <span class="ag-step is-current"></span>
+                <span class="ag-step"></span>
+                <span class="ag-step"></span>
+              </div>
+              <p class="ag-passo-txt" id="ag-passo-txt" aria-live="polite">Passo 1 de 3 · Motivo</p>
+            </div>
+
+            <!-- ------------------------------------------------ PASSO 1 -->
+            <section data-passo="1">
+              <h2 class="pac-h2">Por que você quer a consulta?</h2>
+              <div class="ag-motivos" id="ag-motivos" role="radiogroup" aria-label="Motivo da consulta"></div>
+
+              <div class="field mt-3">
+                <label for="ag-detalhe">Quer contar mais? <span class="opcional">(opcional)</span></label>
+                <textarea id="ag-detalhe" rows="2" placeholder="Ex.: dor de cabeça há 3 dias"></textarea>
+              </div>
+
+              <div class="aviso aviso-info">
+                <i data-ico="stethoscope"></i>
+                <span>
+                  Toda consulta começa com o <strong>clínico geral</strong>.
+                  Se você precisar de especialista, ele mesmo faz o
+                  encaminhamento — você não precisa marcar de novo.
+                </span>
+              </div>
+            </section>
+
+            <!-- ------------------------------------------------ PASSO 2 -->
+            <section data-passo="2" hidden>
+              <h2 class="pac-h2">Escolha o dia</h2>
+              <div class="ag-dias" id="ag-dias"></div>
+
+              <h2 class="pac-h2 mt-3" id="ag-horas-titulo" hidden>Escolha o horário</h2>
+              <div id="ag-horas"></div>
+            </section>
+
+            <!-- ------------------------------------------------ PASSO 3 -->
+            <section data-passo="3" hidden>
+              <h2 class="pac-h2">Confira os dados</h2>
+              <div class="card ag-resumo" id="ag-resumo"></div>
+              <label class="check ag-check">
+                <input type="checkbox" id="ag-lgpd" checked />
+                <span>
+                  Autorizo o médico a ver meu prontuário durante a consulta
+                  (LGPD — Lei 13.709/2018).
+                </span>
+              </label>
+            </section>
+
+            <!-- ---------------------------------------------- SUCESSO -->
+            <section data-passo="4" hidden>
+              <div class="ag-sucesso">
+                <div class="ag-sucesso-ico"><i data-ico="check"></i></div>
+                <h2>Consulta marcada!</h2>
+                <p id="ag-sucesso-txt"></p>
+                <ul class="ag-dicas">
+                  <li><i data-ico="bell"></i> <span>Você vai receber um lembrete antes da consulta.</span></li>
+                  <li><i data-ico="video"></i> <span>No dia, toque em <strong>“Entrar na consulta”</strong>, na tela de Início.</span></li>
+                  <li><i data-ico="wifi"></i> <span>Fique em um lugar calmo e com internet.</span></li>
+                </ul>
+                <a class="btn btn-primary btn-lg btn-block" href="consultas.html">
+                  <i data-ico="calendar"></i> Ver minhas consultas
+                </a>
+                <a class="btn btn-ghost btn-block mt-1" href="dashboard.html">Voltar ao início</a>
+              </div>
+            </section>
+
+            <!-- ações -->
+            <div class="ag-acoes" id="ag-acoes">
+              <button type="button" class="btn btn-ghost btn-lg" id="ag-voltar">
+                <i data-ico="arrow-left"></i> Voltar
+              </button>
+              <button type="button" class="btn btn-primary btn-lg" id="ag-avancar">
+                Continuar <i data-ico="arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <a class="pac-sos" href="tel:192">
+            <i data-ico="phone"></i>
+            <span><strong>Emergência?</strong> Não espere a consulta: ligue 192 (SAMU)</span>
+          </a>
+        </main>
+      </div>
+    </div>
+
+    <div id="cris-root"></div>
+    <div id="toast-container"></div>
+
+    <script src="assets/js/icons.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/paciente.js"></script>
+    <script src="assets/js/assistente.js"></script>
+  </body>
+</html>

@@ -4,7 +4,7 @@
    Depois da primeira visita o sistema abre mesmo sem internet — importante
    para unidades de saúde com conexão instável (risco R3 do projeto).
    ========================================================================= */
-var CACHE = "crimed-v4";
+var CACHE = "crimed-v5";
 
 var ARQUIVOS = [
   "./",
@@ -12,6 +12,7 @@ var ARQUIVOS = [
   "./acesso.html",
   "./dashboard.html",
   "./consultas.html",
+  "./agendar.html",
   "./teleconsulta.html",
   "./prontuarios.html",
   "./perfil.html",
@@ -23,6 +24,7 @@ var ARQUIVOS = [
   "./assets/css/components.css",
   "./assets/css/layout.css",
   "./assets/css/pages.css",
+  "./assets/css/paciente.css",
   "./assets/js/icons.js",
   "./assets/js/core.js",
   "./assets/js/data.js",

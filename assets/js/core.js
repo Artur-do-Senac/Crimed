@@ -97,6 +97,14 @@
     },
   };
 
+  /** Primeiro nome, sem perder o título (Dra. Helena). */
+  function primeiroNome(nome) {
+    var p = String(nome || "").trim().split(/\s+/);
+    if (/^(dr|dra|enf)\.?$/i.test(p[0]) && p[1]) return p[0] + " " + p[1];
+    return p[0] || "";
+  }
+  U.primeiroNome = primeiroNome;
+
   /* =================================================================== TOAST */
   function toast(message, type, title) {
     var box = document.getElementById("toast-container");
@@ -467,20 +475,16 @@
   /* ========================================================== SHELL DO APP */
   var NAV = {
     paciente: [
-      { secao: "Atendimento" },
-      { id: "dashboard", label: "Início", ico: "home", href: "dashboard.html" },
-      { id: "consultas", label: "Minhas Consultas", ico: "calendar", href: "consultas.html", pill: "consultasAtivas" },
-      { id: "teleconsulta", label: "Sala de Teleconsulta", ico: "video", href: "teleconsulta.html" },
-      { secao: "Meus dados" },
-      { id: "prontuarios", label: "Prontuário e Exames", ico: "file-medical", href: "prontuarios.html" },
-      { id: "perfil", label: "Meu Perfil e LGPD", ico: "user", href: "perfil.html" },
-      { secao: "Município" },
-      { id: "sobre", label: "O Projeto", ico: "book", href: "sobre.html" },
+      { id: "dashboard", label: "Início", curto: "Início", ico: "home", href: "dashboard.html" },
+      { id: "agendar", label: "Agendar consulta", curto: "Agendar", ico: "calendar-plus", href: "agendar.html", destaque: true },
+      { id: "consultas", label: "Minhas consultas", curto: "Consultas", ico: "calendar", href: "consultas.html", pill: "consultasAtivas" },
+      { id: "prontuarios", label: "Prontuário e exames", curto: "Prontuário", ico: "file-medical", href: "prontuarios.html" },
+      { id: "perfil", label: "Meu perfil", curto: "Perfil", ico: "user", href: "perfil.html" },
     ],
     medico: [
       { secao: "Atendimento" },
       { id: "medico", label: "Agenda do Dia", ico: "calendar-check", href: "medico.html" },
-      { id: "teleconsulta", label: "Sala de Atendimento", ico: "video", href: "teleconsulta.html?papel=medico" },
+      { id: "teleconsulta", label: "Sala de Atendimento", ico: "video", href: "teleconsulta.html" },
       { secao: "Gestão clínica" },
       { id: "prontuarios", label: "Prontuários", ico: "file-medical", href: "prontuarios.html" },
       { id: "admin", label: "Indicadores", ico: "bar-chart", href: "admin.html" },
@@ -504,7 +508,7 @@
      */
     montar: function (cfg) {
       cfg = cfg || {};
-      var usuario = global.DB ? (global.DB.sessao() || global.DB.perfil()) : {};
+      var usuario = (global.DB && global.DB.sessao()) || {};
       var papel = usuario.papel || "paciente";
       var itens = NAV[papel] || NAV.paciente;
       var ativos = global.DB
@@ -529,7 +533,8 @@
             pill = '<span class="side-pill">' + ativos + "</span>";
           }
           html +=
-            '<a class="side-link' + (cfg.page === it.id ? " is-active" : "") + '" href="' + it.href + '">' +
+            '<a class="side-link' + (it.destaque ? " side-link-cta" : "") + (cfg.page === it.id ? " is-active" : "") +
+            '" href="' + it.href + '"' + (cfg.page === it.id ? ' aria-current="page"' : "") + ">" +
             Icon.svg(it.ico) + "<span>" + U.esc(it.label) + "</span>" + pill + "</a>";
         });
         html +=
@@ -545,6 +550,28 @@
         host.innerHTML = html;
       }
 
+      /* — barra de navegação inferior (celular, área do paciente) — */
+      var velha = document.getElementById("bottom-nav");
+      if (velha) velha.remove();
+      if (papel === "paciente") {
+        var bn = document.createElement("nav");
+        bn.id = "bottom-nav";
+        bn.className = "bottom-nav";
+        bn.setAttribute("aria-label", "Navegação principal");
+        bn.innerHTML = itens
+          .filter(function (it) { return !it.secao; })
+          .map(function (it) {
+            return (
+              '<a class="bn-item' + (it.destaque ? " bn-cta" : "") + (cfg.page === it.id ? " is-active" : "") +
+              '" href="' + it.href + '"' + (cfg.page === it.id ? ' aria-current="page"' : "") + ">" +
+              '<span class="bn-ico">' + Icon.svg(it.ico) + "</span><span>" + U.esc(it.curto || it.label) + "</span></a>"
+            );
+          })
+          .join("");
+        document.body.appendChild(bn);
+        document.body.classList.add("has-bottom-nav");
+      }
+
       /* — topbar — */
       var top = U.qs("[data-shell=topbar]");
       if (top) {
@@ -558,12 +585,15 @@
           "</div></div>" +
           '<div class="topbar-actions">' +
           (cfg.acoes || "") +
-          '<button class="icon-btn" data-a11y="tema" data-tip="Alternar tema">' + Icon.svg("moon") + "</button>" +
+          '<button class="icon-btn hide-mobile" data-a11y="tema" data-tip="Alternar tema" aria-label="Alternar tema">' + Icon.svg("moon") + "</button>" +
           '<button class="icon-btn" data-act="notificacoes" data-tip="Notificações" aria-label="Notificações">' +
           Icon.svg("bell") +
           '<span class="count" data-count-notif data-count="' + naoLidas + '">' + naoLidas + "</span></button>" +
-          '<div class="avatar' + (papel === "medico" ? " avatar-doc" : "") + ' presence" data-tip="' +
-          U.esc(usuario.nome || "") + '">' + U.iniciais(usuario.nome) + "</div>" +
+          '<a class="topbar-user" href="' + (papel === "paciente" ? "perfil.html" : "#") + '"' +
+          (papel === "paciente" ? "" : ' data-act="menu-usuario"') + ' title="' + U.esc(usuario.nome || "") + '">' +
+          '<span class="topbar-user-nome"><strong>' + U.esc(primeiroNome(usuario.nome)) + "</strong>" +
+          "<small>" + U.esc(usuario.papelLabel || "") + "</small></span>" +
+          '<span class="avatar' + (papel === "medico" ? " avatar-doc" : "") + ' presence">' + U.iniciais(usuario.nome) + "</span></a>" +
           "</div>";
       }
 
@@ -574,16 +604,22 @@
     },
 
     ligarEventos: function () {
+      U.qsa("[data-act=menu-usuario]").forEach(function (b) {
+        U.on(b, "click", function (e) {
+          e.preventDefault();
+          toast("Conectado(a) como <strong>" + U.esc((global.DB.sessao() || {}).nome || "") + "</strong>.", "info");
+        });
+      });
       U.qsa("[data-act=sair]").forEach(function (b) {
         U.on(b, "click", function () {
           confirmar({
             titulo: "Sair da conta",
-            texto: "Você voltará para a página inicial do portal.",
+            texto: "Para voltar, você precisará entrar de novo com seu CPF e senha.",
             confirmar: "Sair",
           }).then(function (ok) {
             if (ok) {
               if (global.DB) global.DB.sair();
-              location.href = "index.html";
+              location.href = "acesso.html?saiu=1";
             }
           });
         });
@@ -662,6 +698,16 @@
           );
         })
         .join("");
+      U.qsa("[data-notif]", body).forEach(function (a) {
+        U.on(a, "click", function () {
+          var id = a.getAttribute("data-notif");
+          var l = global.DB.notificacoes().map(function (n) {
+            if (n.id === id) n.lida = true;
+            return n;
+          });
+          global.DB.salvarNotificacoes(l);
+        });
+      });
     },
 
     atualizarBadge: function () {
@@ -837,8 +883,23 @@
   }
 
   /* ================================================================== BOOT */
+  /** Mensagem que sobrevive a um redirecionamento (exibida na próxima página). */
+  function flash(msg, tipo) {
+    try {
+      sessionStorage.setItem("crimed.flash", JSON.stringify({ m: msg, t: tipo || "info" }));
+    } catch (e) {}
+  }
+  function mostrarFlash() {
+    try {
+      var f = JSON.parse(sessionStorage.getItem("crimed.flash") || "null");
+      sessionStorage.removeItem("crimed.flash");
+      if (f) setTimeout(function () { toast(f.m, f.t); }, 250);
+    } catch (e) {}
+  }
+
   function boot() {
     if (global.DB) global.DB.init();
+    mostrarFlash();
     A11y.aplicar();
     ligarA11y();
     ligarGlobais();
@@ -867,6 +928,7 @@
     countUp: countUp,
     confete: confete,
     shell: Shell,
+    flash: flash,
     barraA11y: barraA11y,
     prefs: prefs,
   };

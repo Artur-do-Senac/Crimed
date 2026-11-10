@@ -1,13 +1,16 @@
 /* ============================================================================
    CRIMED · paciente.js
-   Controladores das telas do paciente: painel, consultas, prontuário, exames
-   e receitas digitais.
+   Controladores das telas do paciente: início, agendamento (sempre com
+   clínico geral), consultas, prontuário, exames e receitas digitais.
    ========================================================================= */
 (function (global) {
   "use strict";
 
   var P = {};
   var U;
+
+  var MESES_CURTOS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  var DIAS_CURTOS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
   /* ================================================================ UTIL */
 
@@ -23,6 +26,11 @@
     return agora >= t - 15 * 60000 && agora <= t + 90 * 60000;
   }
 
+  /** A consulta ainda vai acontecer (ou está acontecendo agora)? */
+  function ehFutura(c) {
+    return c.status === "Confirmada" && momento(c).getTime() + 90 * 60000 >= Date.now();
+  }
+
   function contagem(c) {
     var ms = momento(c).getTime() - Date.now();
     if (ms <= 0) return "agora";
@@ -33,15 +41,33 @@
     return U.quando(c.data);
   }
 
-  function badgeStatus(status) {
+  /** Nome da especialidade em linguagem do dia a dia. */
+  function nomeEsp(esp) {
+    return esp === "Clínica Médica" ? "Clínico geral" : esp;
+  }
+
+  function badgeStatus(c) {
+    var status = c.status;
+    if (status === "Confirmada" && !ehFutura(c)) status = "Não compareceu";
     var mapa = {
-      Confirmada: { cls: "badge-confirmada", ico: "calendar-check" },
-      Realizada: { cls: "badge-realizada", ico: "check-circle" },
-      Cancelada: { cls: "badge-cancelada", ico: "x-circle" },
-      "Em andamento": { cls: "badge-warn", ico: "video" },
+      Confirmada: { cls: "badge-confirmada", ico: "calendar-check", txt: "Marcada" },
+      Realizada: { cls: "badge-realizada", ico: "check-circle", txt: "Realizada" },
+      Cancelada: { cls: "badge-cancelada", ico: "x-circle", txt: "Cancelada" },
+      "Em andamento": { cls: "badge-warn", ico: "video", txt: "Em andamento" },
+      "Não compareceu": { cls: "badge-cancelada", ico: "alert-circle", txt: "Não realizada" },
     };
     var m = mapa[status] || mapa.Realizada;
-    return '<span class="badge ' + m.cls + '">' + Icon.svg(m.ico) + U.esc(status) + "</span>";
+    return '<span class="badge ' + m.cls + '">' + Icon.svg(m.ico) + U.esc(m.txt) + "</span>";
+  }
+
+  function blocoData(isoStr) {
+    var d = new Date(isoStr + "T12:00:00");
+    return (
+      '<div class="cc-data" aria-hidden="true">' +
+      '<span class="cc-sem">' + DIAS_CURTOS[d.getDay()] + "</span>" +
+      '<span class="cc-dia">' + d.getDate() + "</span>" +
+      '<span class="cc-mes">' + MESES_CURTOS[d.getMonth()] + "</span></div>"
+    );
   }
 
   /* ===================================================== AÇÕES DE CONSULTA */
@@ -53,84 +79,78 @@
     var c = global.DB.consulta(id);
     if (!c) return;
     UI.confirmar({
-      titulo: "Cancelar teleconsulta",
+      titulo: "Cancelar consulta?",
       texto:
-        "<strong>" + U.esc(c.especialidade) + "</strong> com " + U.esc(c.medico) +
+        "<strong>" + U.esc(nomeEsp(c.especialidade)) + "</strong> com " + U.esc(c.medico) +
         " em " + U.fmtData(c.data) + " às " + U.esc(c.hora) + ".<br>" +
-        "O horário será devolvido à agenda da unidade e outro paciente poderá usá-lo.",
-      confirmar: "Cancelar consulta",
-      cancelar: "Manter",
+        "O horário fica livre para outra pessoa." +
+        (c.encaminhadoPor
+          ? "<br><br><strong>Atenção:</strong> esta consulta foi marcada por encaminhamento. Para marcar de novo, você precisará passar pelo clínico geral."
+          : ""),
+      confirmar: "Sim, cancelar",
+      cancelar: "Não, manter",
       danger: true,
     }).then(function (ok) {
       if (!ok) return;
       global.DB.atualizarConsulta(id, { status: "Cancelada" });
       global.DB.notificar({
         tipo: "consulta",
-        titulo: "Teleconsulta cancelada",
-        texto: c.especialidade + " com " + c.medico + " em " + U.fmtData(c.data) + ".",
+        titulo: "Consulta cancelada",
+        texto: nomeEsp(c.especialidade) + " com " + c.medico + " em " + U.fmtData(c.data) + ".",
         link: "consultas.html",
       });
-      UI.toast("Consulta cancelada. O horário voltou para a agenda da unidade.", "warn");
+      UI.toast("Consulta cancelada.", "warn");
       UI.shell.atualizarBadge();
       P.recarregar();
     });
   };
 
   P.remarcar = function (id) {
-    var c = global.DB.consulta(id);
-    if (!c) return;
-    global.DB.atualizarConsulta(id, { status: "Cancelada" });
-    UI.toast("Escolha o novo horário — a consulta anterior foi liberada.", "info");
-    P.recarregar();
-    global.App.abrirAgendamento(c.especialidade);
+    location.href = "agendar.html?remarcar=" + id;
   };
 
   /* ==================================================== CARTÃO DE CONSULTA */
-  function cartaoConsulta(c, compacto) {
-    var un = global.DB.unidade(c.unidade);
+  function cartaoConsulta(c) {
+    var futura = ehFutura(c);
+    var aberta = futura && janelaSala(c);
     var hoje = U.diasAte(c.data) === 0;
-    var aberta = c.status === "Confirmada" && janelaSala(c);
     var acoes = "";
 
-    if (c.status === "Confirmada") {
+    if (futura) {
       acoes =
-        '<button class="btn ' + (aberta ? "btn-primary pulse" : "btn-outline") +
-        ' btn-sm" data-entrar="' + c.id + '">' + Icon.svg("video") +
-        (aberta ? "Entrar agora" : "Sala virtual") + "</button>" +
-        '<button class="btn btn-ghost btn-sm" data-remarcar="' + c.id + '" data-tip="Remarcar">' +
-        Icon.svg("refresh") + "</button>" +
-        '<button class="btn btn-ghost btn-sm" data-cancelar="' + c.id + '" data-tip="Cancelar" style="color:var(--danger)">' +
-        Icon.svg("trash") + "</button>";
+        '<button class="btn ' + (aberta ? "btn-primary pulse" : "btn-outline") + '" data-entrar="' + c.id + '">' +
+        Icon.svg("video") + (aberta ? "Entrar na consulta" : "Sala da consulta") + "</button>" +
+        (c.encaminhadoPor
+          ? ""
+          : '<button class="btn btn-ghost" data-remarcar="' + c.id + '">' + Icon.svg("refresh") + "Remarcar</button>") +
+        '<button class="btn btn-ghost btn-perigo" data-cancelar="' + c.id + '">' + Icon.svg("x-circle") + "Cancelar</button>";
     } else if (c.status === "Realizada") {
       acoes =
-        '<a class="btn btn-outline btn-sm" href="prontuarios.html?consulta=' + c.id + '">' +
-        Icon.svg("file-medical") + "Ver prontuário</a>";
+        '<a class="btn btn-outline" href="prontuarios.html?consulta=' + c.id + '">' +
+        Icon.svg("file-medical") + "Ver o que o médico registrou</a>";
     } else {
       acoes =
-        '<button class="btn btn-outline btn-sm" data-act="agendar" data-esp="' + U.esc(c.especialidade) + '">' +
-        Icon.svg("calendar-plus") + "Reagendar</button>";
+        '<a class="btn btn-outline" href="agendar.html">' + Icon.svg("calendar-plus") + "Agendar nova consulta</a>";
     }
 
     return (
-      '<article class="consulta-item' + (hoje && c.status === "Confirmada" ? " is-hoje" : "") + '">' +
-      '<div class="avatar avatar-doc avatar-lg" style="width:3.2rem;height:3.2rem;font-size:var(--t-sm)">' +
-      U.iniciais(c.medico) + "</div>" +
-      '<div class="consulta-main">' +
-      "<h4>" + U.esc(c.medico) + badgeStatus(c.status) +
-      (hoje && c.status === "Confirmada"
-        ? '<span class="countdown">' + Icon.svg("clock", "ico-sm") + contagem(c) + "</span>"
-        : "") +
-      "</h4>" +
-      '<div class="consulta-meta">' +
-      "<span>" + Icon.svg("stethoscope") + U.esc(c.especialidade) + "</span>" +
-      "<span>" + Icon.svg("calendar") + U.fmtData(c.data) + " às " + U.esc(c.hora) + "</span>" +
-      (compacto ? "" : "<span>" + Icon.svg("building") + U.esc(un ? un.nome : "—") + "</span>") +
+      '<article class="cc' + (hoje && futura ? " is-hoje" : "") + (futura ? "" : " is-passada") + '">' +
+      '<div class="cc-topo">' +
+      blocoData(c.data) +
+      '<div class="cc-info">' +
+      '<div class="cc-tags">' + badgeStatus(c) +
+      (c.encaminhadoPor ? '<span class="badge badge-info">' + Icon.svg("arrow-up-right") + "Encaminhamento</span>" : "") +
       "</div>" +
-      (c.motivo && !compacto
-        ? '<p class="small muted mt-1">' + Icon.svg("message", "ico-sm") + " " + U.esc(c.motivo) + "</p>"
+      "<h4>" + U.esc(nomeEsp(c.especialidade)) + "</h4>" +
+      '<p class="cc-med">' + U.esc(c.medico) + "</p>" +
+      '<p class="cc-meta">' + Icon.svg("clock", "ico-sm") + U.esc(c.hora) +
+      (hoje && futura ? ' <b class="cc-cont">· ' + contagem(c) + "</b>" : "") +
+      " · " + Icon.svg("video", "ico-sm") + "Por vídeo</p>" +
+      (c.encaminhadoPor
+        ? '<p class="cc-enc">Encaminhado por ' + U.esc(c.encaminhadoPor) + "</p>"
         : "") +
-      "</div>" +
-      '<div class="consulta-actions">' + acoes + "</div>" +
+      "</div></div>" +
+      '<div class="cc-acoes">' + acoes + "</div>" +
       "</article>"
     );
   }
@@ -147,195 +167,77 @@
     });
   }
 
-  /* ====================================================== PÁGINA: PAINEL */
+  function futurasOrdenadas() {
+    return global.DB.consultas()
+      .filter(ehFutura)
+      .sort(function (a, b) { return momento(a) - momento(b); });
+  }
+
+  /* ====================================================== PÁGINA: INÍCIO */
   P.paginaDashboard = function () {
     var sessao = global.App.exigirSessao(["paciente"]);
     if (!sessao) return;
 
-    var perfil = global.DB.perfil();
     UI.shell.montar({
       page: "dashboard",
-      titulo: "Olá, " + perfil.nome.split(" ")[0] + " 👋",
-      sub: U.diaSemana(global.DB.hoje()) + ", " + U.fmtDataLonga(global.DB.hoje()),
+      titulo: "Início",
+      sub: U.diaSemana(global.DB.hoje()) + ", " + U.fmtDataLonga(global.DB.hoje()).replace(/ de \d{4}$/, ""),
     });
 
-    P.recarregar = renderDashboard;
-    renderDashboard();
+    var saud = document.getElementById("pac-saudacao");
+    if (saud) {
+      var h = new Date().getHours();
+      saud.textContent =
+        (h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite") + ", " + U.primeiroNome(sessao.nome) + "!";
+    }
+
+    P.recarregar = renderProxima;
+    renderProxima();
 
     /* o relógio da próxima consulta atualiza sozinho */
-    setInterval(function () {
-      var alvo = document.getElementById("proxima-consulta");
-      if (alvo && alvo.getAttribute("data-live") === "1") renderProxima();
-    }, 30000);
-
-    document.addEventListener("click", function (e) {
-      if (e.target.closest && e.target.closest("[data-act=campanha]")) {
-        UI.toast(
-          "Vacinação contra Influenza disponível nas 10 UBS de Criciúma, de segunda a sexta, das 8h às 17h.",
-          "info",
-          "Campanha de vacinação"
-        );
-      }
-    });
-
-    function renderDashboard() {
-      renderProxima();
-      renderKpis();
-      renderHistorico();
-      renderJornada();
-    }
+    setInterval(renderProxima, 30000);
 
     function renderProxima() {
       var host = document.getElementById("proxima-consulta");
       if (!host) return;
-      var futuras = global.DB.consultas()
-        .filter(function (c) { return c.status === "Confirmada" && U.diasAte(c.data) >= 0; })
-        .sort(function (a, b) { return momento(a) - momento(b); });
+      var futuras = futurasOrdenadas();
+      var cont = document.getElementById("pac-qtd-consultas");
+      if (cont) cont.textContent = futuras.length ? futuras.length + (futuras.length > 1 ? " marcadas" : " marcada") : "";
 
       if (!futuras.length) {
-        host.setAttribute("data-live", "0");
         host.innerHTML =
-          '<div class="empty"><div class="icon-bubble icon-bubble-lg">' + Icon.svg("calendar") +
-          "</div><h4>Nenhuma consulta agendada</h4>" +
-          "<p>Quando você marcar uma teleconsulta, ela aparece aqui com um lembrete e o botão de entrada na sala.</p>" +
-          '<button class="btn btn-primary mt-3" data-act="agendar">' + Icon.svg("calendar-plus") +
-          "Agendar minha consulta</button></div>";
+          '<div class="pac-vazio">' + Icon.svg("calendar") +
+          "<div><strong>Você não tem consulta marcada.</strong>" +
+          "<p>Quando marcar, ela aparece aqui.</p></div></div>";
         return;
       }
 
-      host.setAttribute("data-live", "1");
       var c = futuras[0];
-      var un = global.DB.unidade(c.unidade);
-      var med = global.DB.medico(c.medicoId) || {};
       var aberta = janelaSala(c);
       var hoje = U.diasAte(c.data) === 0;
-
       host.innerHTML =
-        '<div class="row mb-3" style="gap:1rem;align-items:flex-start;flex-wrap:wrap">' +
-        '<div class="avatar avatar-doc avatar-lg">' + U.iniciais(c.medico) + "</div>" +
-        '<div style="flex:1;min-width:200px">' +
-        "<h3>" + U.esc(c.medico) + "</h3>" +
-        '<p class="muted">' + U.esc(c.especialidade) + " · " + U.esc(med.crm || "") + "</p>" +
-        '<div class="row mt-2" style="gap:.4rem;flex-wrap:wrap">' +
-        badgeStatus(c.status) +
-        '<span class="badge badge-outline">' + Icon.svg("building") + U.esc(un ? un.nome : "—") + "</span>" +
-        "</div></div>" +
-        '<div class="center" style="min-width:140px">' +
-        '<div class="kpi-label">' + (hoje ? "Começa" : "Acontece") + "</div>" +
-        '<div class="kpi-value" style="font-size:var(--t-2xl);color:var(--brand)">' +
-        (hoje ? contagem(c) : U.quando(c.data)) + "</div>" +
-        '<div class="small muted">' + U.fmtData(c.data) + " · " + U.esc(c.hora) + "</div>" +
-        "</div></div>" +
-
-        (c.motivo
-          ? '<div class="resumo-box mb-3"><div class="resumo-linha"><span>Motivo informado</span><b>' +
-            U.esc(c.motivo) + "</b></div></div>"
-          : "") +
-
-        '<div class="row" style="gap:.6rem;flex-wrap:wrap">' +
-        '<button class="btn ' + (aberta ? "btn-primary pulse" : "btn-primary") + '" data-entrar="' + c.id + '">' +
-        Icon.svg("video") + (aberta ? "Entrar na sala agora" : "Abrir sala virtual") + "</button>" +
-        '<button class="btn btn-outline" data-remarcar="' + c.id + '">' + Icon.svg("refresh") + "Remarcar</button>" +
-        '<button class="btn btn-ghost" data-cancelar="' + c.id + '" style="color:var(--danger)">' +
-        Icon.svg("trash") + "Cancelar</button>" +
+        '<div class="prox' + (aberta ? " is-aberta" : "") + '">' +
+        '<div class="prox-quando">' +
+        '<span class="prox-rotulo">' + (hoje ? "Hoje" : U.diaSemana(c.data)) + "</span>" +
+        '<strong class="prox-hora">' + U.esc(c.hora) + "</strong>" +
+        '<span class="prox-data">' + (hoje ? contagem(c) : U.fmtDataLonga(c.data).replace(/ de \d{4}$/, "")) + "</span>" +
         "</div>" +
-
-        '<p class="small muted mt-3">' + Icon.svg("info", "ico-sm") +
-        " A sala abre 15 minutos antes do horário marcado. Você recebe um lembrete por WhatsApp e e-mail." +
-        "</p>" +
-
+        '<div class="prox-info">' +
+        "<h3>" + U.esc(nomeEsp(c.especialidade)) + "</h3>" +
+        "<p>" + U.esc(c.medico) + "</p>" +
+        (c.encaminhadoPor ? '<p class="cc-enc">Encaminhado por ' + U.esc(c.encaminhadoPor) + "</p>" : "") +
+        "</div>" +
+        '<button class="btn ' + (aberta ? "btn-primary pulse" : "btn-outline") + ' btn-block btn-lg" data-entrar="' + c.id + '">' +
+        Icon.svg("video") + (aberta ? "Entrar na consulta agora" : "Ver sala da consulta") + "</button>" +
+        (aberta ? "" : '<p class="prox-dica">' + Icon.svg("info", "ico-sm") + " A sala abre 15 minutos antes do horário.</p>") +
+        "</div>" +
         (futuras.length > 1
-          ? '<hr class="divider"><div class="small muted mb-2"><strong>Também agendadas</strong></div>' +
-            futuras.slice(1).map(function (x) { return cartaoConsulta(x, true); }).join("")
+          ? '<a class="prox-mais" href="consultas.html">+ ' + (futuras.length - 1) +
+            (futuras.length - 1 > 1 ? " outras consultas marcadas" : " outra consulta marcada") +
+            Icon.svg("chevron-right", "ico-sm") + "</a>"
           : "");
 
       ligarAcoesConsulta(host);
-    }
-
-    function renderKpis() {
-      var host = document.getElementById("kpis-paciente");
-      if (!host) return;
-      var cs = global.DB.consultas();
-      var realizadas = cs.filter(function (c) { return c.status === "Realizada"; }).length;
-      var agendadas = cs.filter(function (c) { return c.status === "Confirmada"; }).length;
-      var exames = global.DB.exames();
-      var disponiveis = exames.filter(function (e) { return e.status === "Disponível"; }).length;
-      var receitasAtivas = global.DB.receitas().filter(function (r) {
-        return U.diasAte(r.validade) >= 0;
-      }).length;
-      /* estimativa: 14 km por deslocamento evitado (ida e volta média em Criciúma) */
-      var km = realizadas * 14;
-
-      var tiles = [
-        { label: "Consultas realizadas", valor: realizadas, ico: "check-circle", cls: "bub-brand", foot: "no seu histórico" },
-        { label: "Agendadas", valor: agendadas, ico: "calendar-check", cls: "bub-accent", foot: "próximos atendimentos" },
-        { label: "Exames liberados", valor: disponiveis, ico: "flask", cls: "bub-warn", foot: "de " + exames.length + " solicitados" },
-        { label: "Km que você não andou", valor: km, ico: "map-pin", cls: "bub-brand", foot: "deslocamentos evitados" },
-      ];
-
-      host.innerHTML = tiles
-        .map(function (t) {
-          return (
-            '<div class="kpi"><div class="kpi-top">' +
-            '<span class="kpi-label">' + t.label + "</span>" +
-            '<span class="icon-bubble icon-bubble-sm ' + t.cls + '">' + Icon.svg(t.ico) + "</span></div>" +
-            '<div class="kpi-value" data-count="' + t.valor + '">0</div>' +
-            '<div class="kpi-foot">' + t.foot + "</div></div>"
-          );
-        })
-        .join("");
-      U.qsa("[data-count]", host).forEach(UI.countUp);
-    }
-
-    function renderHistorico() {
-      var tb = document.getElementById("historico-tbody");
-      if (!tb) return;
-      var lista = global.DB.consultas()
-        .filter(function (c) { return c.status !== "Confirmada"; })
-        .sort(function (a, b) { return momento(b) - momento(a); })
-        .slice(0, 5);
-
-      if (!lista.length) {
-        tb.innerHTML = '<tr><td colspan="5" class="table-empty">Nenhum atendimento registrado ainda.</td></tr>';
-        return;
-      }
-      tb.innerHTML = lista
-        .map(function (c) {
-          return (
-            "<tr><td>" + U.fmtData(c.data) + "</td>" +
-            '<td class="td-strong">' + U.esc(c.medico) + "</td>" +
-            "<td>" + U.esc(c.especialidade) + "</td>" +
-            "<td>" + badgeStatus(c.status) + "</td>" +
-            '<td>' + (c.status === "Realizada"
-              ? '<a class="btn btn-ghost btn-sm" href="prontuarios.html?consulta=' + c.id + '">' +
-                Icon.svg("eye") + "Abrir</a>"
-              : '<span class="small mute-2">—</span>') + "</td></tr>"
-          );
-        })
-        .join("");
-    }
-
-    function renderJornada() {
-      var host = document.getElementById("jornada-saude");
-      if (!host) return;
-      var lista = global.DB.consultas()
-        .sort(function (a, b) { return momento(b) - momento(a); })
-        .slice(0, 5);
-
-      host.innerHTML =
-        '<div class="timeline">' +
-        lista
-          .map(function (c) {
-            var futuro = U.diasAte(c.data) > 0;
-            return (
-              '<div class="timeline-item' + (futuro ? " is-future" : c.status === "Realizada" ? " is-done" : "") + '">' +
-              '<div class="timeline-date">' + U.fmtData(c.data) + " · " + U.quando(c.data) + "</div>" +
-              "<h5>" + U.esc(c.especialidade) + "</h5>" +
-              '<p class="small muted">' + U.esc(c.medico) + " — " + U.esc(c.status) + "</p></div>"
-            );
-          })
-          .join("") +
-        "</div>";
     }
   };
 
@@ -344,132 +246,364 @@
     var sessao = global.App.exigirSessao(["paciente"]);
     if (!sessao) return;
 
-    UI.shell.montar({
-      page: "consultas",
-      titulo: "Minhas Consultas",
-      sub: "Agendamentos, histórico e agenda do mês",
-    });
+    UI.shell.montar({ page: "consultas", titulo: "Minhas consultas" });
 
-    var filtro = "Todas";
-    var busca = "";
+    var aba = U.param("aba") === "anteriores" ? "anteriores" : "proximas";
 
-    P.recarregar = function () {
-      renderLista();
-      renderCalendario();
-    };
+    P.recarregar = render;
 
-    U.qsa("#filtros-consulta .pill-tab").forEach(function (b) {
+    U.qsa("#abas-consulta [data-aba]").forEach(function (b) {
       b.addEventListener("click", function () {
-        U.qsa("#filtros-consulta .pill-tab").forEach(function (x) { x.classList.remove("is-active"); });
-        b.classList.add("is-active");
-        filtro = b.getAttribute("data-filtro");
-        renderLista();
+        aba = b.getAttribute("data-aba");
+        render();
       });
     });
 
-    var campoBusca = document.getElementById("busca-consulta");
-    if (campoBusca) {
-      campoBusca.addEventListener("input", UI.u.debounce(function () {
-        busca = campoBusca.value.toLowerCase();
-        renderLista();
-      }, 200));
-    }
+    function render() {
+      var todas = global.DB.consultas();
+      var proximas = todas.filter(ehFutura).sort(function (a, b) { return momento(a) - momento(b); });
+      var anteriores = todas
+        .filter(function (c) { return !ehFutura(c); })
+        .sort(function (a, b) { return momento(b) - momento(a); });
 
-    function renderLista() {
+      U.qsa("#abas-consulta [data-aba]").forEach(function (b) {
+        var ativo = b.getAttribute("data-aba") === aba;
+        b.classList.toggle("is-active", ativo);
+        b.setAttribute("aria-selected", ativo ? "true" : "false");
+      });
+      var n1 = document.getElementById("qtd-proximas");
+      var n2 = document.getElementById("qtd-anteriores");
+      if (n1) n1.textContent = proximas.length;
+      if (n2) n2.textContent = anteriores.length;
+
       var host = document.getElementById("lista-consultas");
-      if (!host) return;
-      var lista = global.DB.consultas()
-        .filter(function (c) { return filtro === "Todas" || c.status === filtro; })
-        .filter(function (c) {
-          if (!busca) return true;
-          return (c.medico + " " + c.especialidade + " " + (c.motivo || "")).toLowerCase().indexOf(busca) >= 0;
-        })
-        .sort(function (a, b) {
-          /* futuras primeiro (mais próximas no topo), depois passadas */
-          var fa = U.diasAte(a.data) >= 0 && a.status === "Confirmada";
-          var fb = U.diasAte(b.data) >= 0 && b.status === "Confirmada";
-          if (fa !== fb) return fa ? -1 : 1;
-          return fa ? momento(a) - momento(b) : momento(b) - momento(a);
-        });
-
+      var lista = aba === "proximas" ? proximas : anteriores;
       if (!lista.length) {
         host.innerHTML =
-          '<div class="empty"><div class="icon-bubble icon-bubble-lg">' + Icon.svg("search") +
-          "</div><h4>Nada por aqui</h4><p>Nenhuma consulta corresponde a este filtro.</p>" +
-          '<button class="btn btn-primary mt-3" data-act="agendar">' + Icon.svg("calendar-plus") +
-          "Agendar teleconsulta</button></div>";
+          '<div class="pac-vazio pac-vazio-grande">' + Icon.svg(aba === "proximas" ? "calendar" : "history") +
+          "<div><strong>" + (aba === "proximas" ? "Nenhuma consulta marcada" : "Nenhuma consulta anterior") + "</strong>" +
+          "<p>" + (aba === "proximas"
+            ? "Toque em “Agendar consulta” para marcar com o clínico geral."
+            : "Suas consultas já realizadas aparecem aqui.") + "</p></div></div>" +
+          (aba === "proximas"
+            ? '<a class="btn btn-primary btn-lg btn-block mt-2" href="agendar.html">' + Icon.svg("calendar-plus") + "Agendar consulta</a>"
+            : "");
         return;
       }
-      host.innerHTML = lista.map(function (c) { return cartaoConsulta(c); }).join("");
+      host.innerHTML = lista.map(cartaoConsulta).join("");
       ligarAcoesConsulta(host);
     }
 
-    function renderCalendario() {
-      var host = document.getElementById("calendario");
-      if (!host) return;
-      var hoje = new Date();
-      var ano = hoje.getFullYear();
-      var mes = hoje.getMonth();
-      var primeiro = new Date(ano, mes, 1);
-      var dias = new Date(ano, mes + 1, 0).getDate();
-      var inicio = primeiro.getDay();
+    render();
 
-      var nomeMes = primeiro.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
-      var rotulo = document.getElementById("calendario-mes");
-      if (rotulo) rotulo.textContent = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+    /* links antigos (?agendar=1) agora levam à página de agendamento */
+    if (U.param("agendar")) location.replace("agendar.html");
+  };
 
-      var porDia = {};
-      global.DB.consultas().forEach(function (c) {
-        var d = new Date(c.data + "T12:00:00");
-        if (d.getMonth() === mes && d.getFullYear() === ano) {
-          (porDia[d.getDate()] = porDia[d.getDate()] || []).push(c);
+  /* ===================================================== PÁGINA: AGENDAR */
+  var MOTIVOS = [
+    { id: "rotina", label: "Consulta de rotina", desc: "Check-up ou acompanhamento", ico: "clipboard" },
+    { id: "sintomas", label: "Estou com sintomas", desc: "Dor, febre, mal-estar…", ico: "activity" },
+    { id: "receita", label: "Renovar receita", desc: "Remédio de uso contínuo", ico: "pill" },
+    { id: "exame", label: "Mostrar resultado de exame", desc: "Levar o exame ao médico", ico: "flask" },
+    { id: "outro", label: "Outro motivo", desc: "Conte no campo abaixo", ico: "message" },
+  ];
+
+  P.paginaAgendar = function () {
+    var sessao = global.App.exigirSessao(["paciente"]);
+    if (!sessao) return;
+    UI.shell.montar({ page: "agendar", titulo: "Agendar consulta", sub: "Com clínico geral, por vídeo" });
+
+    var perfil = global.DB.perfil();
+    var st = { passo: 1, motivo: "", data: "", hora: "", medicoId: "" };
+    var remarcando = null;
+
+    /* — remarcação — */
+    var idRem = U.param("remarcar");
+    if (idRem) {
+      var cr = global.DB.consulta(idRem);
+      if (cr && ehFutura(cr) && !cr.encaminhadoPor) {
+        remarcando = cr;
+        var av = document.getElementById("ag-remarcar");
+        av.hidden = false;
+        av.innerHTML =
+          Icon.svg("refresh") + "<span>Você está remarcando a consulta de <strong>" +
+          U.fmtData(cr.data) + " às " + U.esc(cr.hora) + "</strong>. Ela só será cancelada quando você confirmar o novo horário.</span>";
+        st.motivo = (MOTIVOS.filter(function (m) { return m.label === cr.motivo; })[0] || {}).id || "";
+        if (!st.motivo && cr.motivo) {
+          st.motivo = "outro";
+          document.getElementById("ag-detalhe").value = cr.motivo;
         }
-      });
-
-      var html =
-        '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem">' +
-        ["D", "S", "T", "Q", "Q", "S", "S"]
-          .map(function (d) {
-            return '<div class="center tiny bold mute-2" style="padding:.3rem 0">' + d + "</div>";
-          })
-          .join("");
-
-      for (var i = 0; i < inicio; i++) html += "<div></div>";
-
-      for (var dia = 1; dia <= dias; dia++) {
-        var cs = porDia[dia] || [];
-        var ehHoje = dia === hoje.getDate();
-        var temConfirmada = cs.some(function (c) { return c.status === "Confirmada"; });
-        var cor = temConfirmada
-          ? "var(--brand)"
-          : cs.length
-          ? "var(--ink-300)"
-          : "transparent";
-        html +=
-          '<div style="position:relative;aspect-ratio:1;display:grid;place-items:center;border-radius:var(--r-sm);' +
-          "font-size:var(--t-sm);font-weight:" + (ehHoje ? "800" : "500") + ";" +
-          (ehHoje ? "background:var(--brand-soft);color:var(--brand-strong);" : "") +
-          (cs.length ? "cursor:pointer;" : "") +
-          '" ' + (cs.length ? 'data-tip="' + U.esc(cs.map(function (c) { return c.especialidade; }).join(", ")) + '"' : "") + ">" +
-          dia +
-          (cs.length
-            ? '<span style="position:absolute;bottom:14%;width:5px;height:5px;border-radius:50%;background:' + cor + '"></span>'
-            : "") +
-          "</div>";
       }
-      html += "</div>";
-      host.innerHTML = html;
     }
 
-    renderLista();
-    renderCalendario();
+    /* — motivo pré-selecionado (vindo da Cris, por exemplo) — */
+    var mParam = U.param("motivo");
+    if (mParam && !st.motivo) {
+      var achado = MOTIVOS.filter(function (m) { return m.label === mParam || m.id === mParam; })[0];
+      if (achado) st.motivo = achado.id;
+    }
 
-    /* atalho vindo da assistente Cris ou do menu rápido */
-    if (U.param("agendar")) {
+    /* — passo 1: motivos — */
+    var hostMot = document.getElementById("ag-motivos");
+    hostMot.innerHTML = MOTIVOS.map(function (m) {
+      return (
+        '<button type="button" class="ag-motivo" role="radio" aria-checked="false" data-motivo="' + m.id + '">' +
+        '<span class="ag-motivo-ico">' + Icon.svg(m.ico) + "</span>" +
+        '<span class="ag-motivo-txt"><strong>' + m.label + "</strong><small>" + m.desc + "</small></span>" +
+        '<span class="ag-radio" aria-hidden="true"></span></button>'
+      );
+    }).join("");
+    hostMot.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-motivo]");
+      if (!b) return;
+      st.motivo = b.getAttribute("data-motivo");
+      marcarMotivo();
+      if (st.motivo === "outro" || st.motivo === "sintomas") {
+        setTimeout(function () { document.getElementById("ag-detalhe").focus(); }, 50);
+      }
+    });
+    function marcarMotivo() {
+      U.qsa("[data-motivo]", hostMot).forEach(function (b) {
+        var on = b.getAttribute("data-motivo") === st.motivo;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-checked", on ? "true" : "false");
+      });
+    }
+    marcarMotivo();
+
+    /* — passo 2: dias e horários — */
+    var clinicos = global.DB.clinicosGerais().slice().sort(function (a, b) {
+      /* o clínico da UBS do paciente vem primeiro */
+      return (b.unidade === perfil.unidade) - (a.unidade === perfil.unidade);
+    });
+
+    /**
+     * Horários livres do dia, cada um já com o clínico que vai atender.
+     * Primeiro os clínicos da UBS do paciente; os das outras unidades só
+     * entram quando a própria UBS tem poucas vagas naquele dia.
+     */
+    function vagasDoDia(data) {
+      var mapa = {};
+      var daUbs = clinicos.filter(function (m) { return m.unidade === perfil.unidade; });
+      var outros = clinicos.filter(function (m) { return m.unidade !== perfil.unidade; });
+      function somar(lista) {
+        lista.forEach(function (m) {
+          global.DB.horariosLivres(m.id, data).forEach(function (h) {
+            if (!mapa[h]) mapa[h] = m.id;
+          });
+        });
+      }
+      somar(daUbs);
+      if (Object.keys(mapa).length < 4) somar(outros);
+      return Object.keys(mapa).sort().map(function (h) { return { hora: h, medicoId: mapa[h] }; });
+    }
+
+    var dias = [];
+    for (var i = 0; dias.length < 12 && i < 30; i++) {
+      var dt = global.DB.dayOffset(i);
+      var dow = new Date(dt + "T12:00:00").getDay();
+      if (dow === 0 || dow === 6) continue;
+      var vagas = vagasDoDia(dt);
+      if (i === 0 && !vagas.length) continue;
+      dias.push({ data: dt, vagas: vagas });
+    }
+
+    var hostDias = document.getElementById("ag-dias");
+    hostDias.innerHTML = dias.map(function (d) {
+      var x = new Date(d.data + "T12:00:00");
+      var rot = U.diasAte(d.data) === 0 ? "Hoje" : U.diasAte(d.data) === 1 ? "Amanhã" : DIAS_CURTOS[x.getDay()];
+      return (
+        '<button type="button" class="ag-dia" data-dia="' + d.data + '"' + (d.vagas.length ? "" : " disabled") + ">" +
+        "<small>" + rot + "</small><strong>" + x.getDate() + "</strong><span>" + MESES_CURTOS[x.getMonth()] + "</span>" +
+        '<em>' + (d.vagas.length ? d.vagas.length + " vagas" : "Lotado") + "</em></button>"
+      );
+    }).join("");
+    hostDias.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-dia]");
+      if (!b || b.disabled) return;
+      st.data = b.getAttribute("data-dia");
+      st.hora = "";
+      st.medicoId = "";
+      renderDias();
+      renderHoras();
+    });
+
+    function renderDias() {
+      U.qsa("[data-dia]", hostDias).forEach(function (b) {
+        var on = b.getAttribute("data-dia") === st.data;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        if (on && b.scrollIntoView) b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      });
+    }
+
+    function renderHoras() {
+      var host = document.getElementById("ag-horas");
+      var tit = document.getElementById("ag-horas-titulo");
+      if (!st.data) {
+        tit.hidden = true;
+        host.innerHTML = "";
+        return;
+      }
+      tit.hidden = false;
+      tit.textContent = "Horários de " + U.diaSemana(st.data).toLowerCase() + ", " + U.fmtData(st.data).slice(0, 5);
+      var dia = dias.filter(function (d) { return d.data === st.data; })[0];
+      var vagas = dia ? dia.vagas : [];
+      var manha = vagas.filter(function (v) { return v.hora < "12:00"; });
+      var tarde = vagas.filter(function (v) { return v.hora >= "12:00"; });
+      function grupo(titulo, ico, lista) {
+        if (!lista.length) return "";
+        return (
+          '<div class="ag-turno"><p class="ag-turno-tit">' + Icon.svg(ico, "ico-sm") + titulo + "</p>" +
+          '<div class="ag-horas">' +
+          lista.map(function (v) {
+            return (
+              '<button type="button" class="ag-hora' + (st.hora === v.hora ? " is-active" : "") +
+              '" data-hora="' + v.hora + '" data-med="' + v.medicoId + '">' + v.hora + "</button>"
+            );
+          }).join("") +
+          "</div></div>"
+        );
+      }
+      host.innerHTML = grupo("Manhã", "sun", manha) + grupo("Tarde", "clock", tarde);
+      host.onclick = function (e) {
+        var b = e.target.closest("[data-hora]");
+        if (!b) return;
+        st.hora = b.getAttribute("data-hora");
+        st.medicoId = b.getAttribute("data-med");
+        U.qsa("[data-hora]", host).forEach(function (x) { x.classList.toggle("is-active", x === b); });
+        var btn = document.getElementById("ag-avancar");
+        if (btn && btn.scrollIntoView && innerWidth < 1024) btn.scrollIntoView({ behavior: "smooth", block: "end" });
+      };
+    }
+
+    /* — passo 3: resumo — */
+    function motivoTexto() {
+      var m = MOTIVOS.filter(function (x) { return x.id === st.motivo; })[0];
+      var det = document.getElementById("ag-detalhe").value.trim();
+      if (!m) return det;
+      if (m.id === "outro") return det || m.label;
+      return m.label + (det ? " — " + det : "");
+    }
+    function renderResumo() {
+      var m = global.DB.medico(st.medicoId);
+      var un = global.DB.unidade(m.unidade);
+      document.getElementById("ag-resumo").innerHTML =
+        '<div class="ag-resumo-data">' + Icon.svg("calendar-check") +
+        "<div><strong>" + U.diaSemana(st.data) + ", " + U.fmtDataLonga(st.data).replace(/ de \d{4}$/, "") + "</strong>" +
+        "<span>às " + st.hora + "</span></div></div>" +
+        '<div class="resumo-linha"><span>Médico(a)</span><b>' + U.esc(m.nome) + "</b></div>" +
+        '<div class="resumo-linha"><span>Tipo</span><b>Clínico geral</b></div>' +
+        '<div class="resumo-linha"><span>Como será</span><b>Por vídeo, no celular ou computador</b></div>' +
+        '<div class="resumo-linha"><span>Unidade</span><b>' + U.esc(un ? un.nome : "—") + "</b></div>" +
+        '<div class="resumo-linha"><span>Motivo</span><b>' + U.esc(motivoTexto()) + "</b></div>";
+    }
+
+    /* — navegação entre passos — */
+    var TITULOS = ["", "Motivo", "Dia e horário", "Confirmar"];
+    function irPara(n) {
+      st.passo = n;
+      U.qsa("[data-passo]").forEach(function (p) {
+        p.hidden = Number(p.getAttribute("data-passo")) !== n;
+      });
+      U.qsa(".ag-step").forEach(function (s, i) {
+        s.classList.toggle("is-done", i + 1 < n);
+        s.classList.toggle("is-current", i + 1 === n);
+      });
+      var txt = document.getElementById("ag-passo-txt");
+      if (txt) txt.textContent = n <= 3 ? "Passo " + n + " de 3 · " + TITULOS[n] : "";
+      document.getElementById("ag-progresso").hidden = n > 3;
+      document.getElementById("ag-acoes").hidden = n > 3;
+      document.getElementById("ag-voltar").style.visibility = n === 1 ? "hidden" : "visible";
+      var av = document.getElementById("ag-avancar");
+      av.innerHTML = n === 3
+        ? Icon.svg("check") + "Confirmar consulta"
+        : "Continuar" + Icon.svg("arrow-right");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("ag-avancar").addEventListener("click", function () {
+      if (st.passo === 1) {
+        if (!st.motivo) return UI.toast("Escolha o motivo da consulta.", "warn");
+        if (st.motivo === "outro" && !document.getElementById("ag-detalhe").value.trim()) {
+          document.getElementById("ag-detalhe").focus();
+          return UI.toast("Conte em poucas palavras o motivo da consulta.", "warn");
+        }
+        if (!st.data) {
+          var primeiro = dias.filter(function (d) { return d.vagas.length; })[0];
+          if (primeiro) {
+            st.data = primeiro.data;
+          }
+        }
+        irPara(2);
+        renderDias();
+        renderHoras();
+        return;
+      }
+      if (st.passo === 2) {
+        if (!st.data) return UI.toast("Escolha o dia.", "warn");
+        if (!st.hora) return UI.toast("Escolha um horário.", "warn");
+        renderResumo();
+        return irPara(3);
+      }
+      if (st.passo === 3) {
+        if (!document.getElementById("ag-lgpd").checked) {
+          return UI.toast("Marque a autorização para o médico ver seu prontuário.", "warn");
+        }
+        confirmar(this);
+      }
+    });
+    document.getElementById("ag-voltar").addEventListener("click", function () {
+      if (st.passo > 1) irPara(st.passo - 1);
+    });
+
+    function confirmar(btn) {
+      btn.classList.add("is-loading");
       setTimeout(function () {
-        global.App.abrirAgendamento(U.param("esp") || "");
-      }, 300);
+        var m = global.DB.medico(st.medicoId);
+        var nova = {
+          id: Date.now(),
+          pacienteId: perfil.id,
+          paciente: perfil.nome,
+          medicoId: m.id,
+          medico: m.nome,
+          especialidade: m.especialidade,
+          unidade: m.unidade,
+          data: st.data,
+          hora: st.hora,
+          status: "Confirmada",
+          motivo: motivoTexto() || "Consulta agendada pelo portal",
+          resumo: "",
+          conduta: "",
+          anamnese: "",
+        };
+        var lista = global.DB.consultas();
+        if (remarcando) {
+          lista.forEach(function (c) {
+            if (String(c.id) === String(remarcando.id)) c.status = "Cancelada";
+          });
+        }
+        lista.push(nova);
+        global.DB.salvarConsultas(lista);
+        global.DB.notificar({
+          tipo: "consulta",
+          titulo: remarcando ? "Consulta remarcada" : "Consulta marcada",
+          texto: "Clínico geral com " + m.nome + " em " + U.fmtData(st.data) + " às " + st.hora + ".",
+          link: "consultas.html",
+        });
+        btn.classList.remove("is-loading");
+        UI.shell.atualizarBadge();
+        UI.confete();
+
+        document.getElementById("ag-sucesso-txt").innerHTML =
+          "<strong>" + U.diaSemana(st.data) + ", " + U.fmtDataLonga(st.data).replace(/ de \d{4}$/, "") +
+          " às " + st.hora + "</strong><br>com " + U.esc(m.nome) + " (clínico geral)";
+        irPara(4);
+      }, 700);
     }
+
+    irPara(1);
   };
 
   /* ================================================= PÁGINA: PRONTUÁRIOS */
@@ -598,7 +732,7 @@
       if (!c) return;
       var un = global.DB.unidade(c.unidade);
       var med = global.DB.medico(c.medicoId) || {};
-      var p = global.DB.perfil();
+      var p = ehPaciente ? global.DB.perfil() : global.DB.pacienteDaConsulta(c);
 
       document.getElementById("pront-cabecalho").innerHTML =
         "Atendimento de <strong>" + U.esc(c.especialidade) + "</strong> realizado por " +
@@ -744,8 +878,8 @@
             Icon.svg("copy") + "Copiar código</button>" +
             (valida
               ? ""
-              : '<button class="btn btn-outline btn-sm" data-act="agendar" data-esp="' +
-                U.esc(r.especialidade) + '">' + Icon.svg("refresh") + "Solicitar renovação</button>") +
+              : '<a class="btn btn-outline btn-sm" href="agendar.html?motivo=receita">' +
+                Icon.svg("refresh") + "Pedir renovação ao clínico geral</a>") +
             "</div></div></article>"
           );
         })
@@ -971,6 +1105,7 @@
     var page = document.body.getAttribute("data-page");
     if (page === "dashboard") P.paginaDashboard();
     if (page === "consultas") P.paginaConsultas();
+    if (page === "agendar") P.paginaAgendar();
     if (page === "prontuarios") P.paginaProntuarios();
     if (page === "perfil") renderAuditoria();
   }

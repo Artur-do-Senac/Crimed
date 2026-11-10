@@ -363,7 +363,8 @@
     sessao = global.App.exigirSessao();
     if (!sessao) return;
 
-    ehMedico = sessao.papel === "medico" || U.param("papel") === "medico";
+    /* o papel vem SOMENTE da conta conectada — nunca da URL */
+    ehMedico = sessao.papel === "medico";
 
     /* consulta escolhida, ou a próxima confirmada do paciente */
     var id = U.param("consulta");
@@ -376,7 +377,7 @@
         })[0];
     }
 
-    var perfil = global.DB.perfil();
+    var perfil = pacienteAtual();
     document.getElementById("voltar-link").href = ehMedico ? "medico.html" : "dashboard.html";
 
     if (ehMedico) {
@@ -478,7 +479,7 @@
   }
 
   function renderInfo() {
-    var perfil = global.DB.perfil();
+    var perfil = pacienteAtual();
     var un = consulta ? global.DB.unidade(consulta.unidade) : null;
     var itens = ehMedico
       ? [
@@ -502,7 +503,9 @@
         ];
 
     var hist = global.DB.consultas()
-      .filter(function (c) { return c.status === "Realizada"; })
+      .filter(function (c) {
+        return c.status === "Realizada" && (c.pacienteId || global.DB.pacienteDemo) === perfil.id;
+      })
       .slice(0, 3);
 
     document.getElementById("info-body").innerHTML =
@@ -523,6 +526,11 @@
             })
             .join("")
         : "");
+  }
+
+  /** Paciente desta sala: o próprio usuário, ou (para o médico) o dono da consulta. */
+  function pacienteAtual() {
+    return ehMedico ? global.DB.pacienteDaConsulta(consulta) : global.DB.perfil();
   }
 
   function idade(nasc) {
@@ -551,12 +559,24 @@
     }
     host.innerHTML =
       '<p class="small" style="color:rgba(255,255,255,.55);margin-bottom:.75rem">' +
-      "Registro clínico de <strong style='color:#fff'>" + U.esc(global.DB.perfil().nome) +
+      "Registro clínico de <strong style='color:#fff'>" + U.esc(pacienteAtual().nome) +
       "</strong> — salvo no prontuário eletrônico.</p>";
     if (consulta) {
       document.getElementById("nota-anamnese").value = consulta.anamnese || "";
       document.getElementById("nota-avaliacao").value = consulta.resumo || "";
-      document.getElementById("nota-conduta").value = consulta.conduta || "";
+      document.getElementById("nota-conduta").value = consulta.conduta || "";
+    }
+    var btnEnc = document.getElementById("btn-encaminhar");
+    if (btnEnc) {
+      btnEnc.classList.remove("hidden");
+      btnEnc.addEventListener("click", function () {
+        var p = pacienteAtual();
+        global.App.abrirEncaminhamento({
+          pacienteId: p.id,
+          paciente: p.nome,
+          motivo: document.getElementById("nota-avaliacao").value.trim(),
+        });
+      });
     }
   }
 

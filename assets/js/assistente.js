@@ -87,8 +87,13 @@
         b.className = "btn btn-primary btn-sm mt-2";
         b.innerHTML = Icon.svg("calendar-plus") + UI.u.esc(no.acao.label);
         b.addEventListener("click", function () {
-          var destino = "consultas.html?agendar=1&esp=" + encodeURIComponent(no.acao.especialidade);
-          if (global.DB.sessao()) location.href = destino;
+          var destino = "agendar.html?motivo=" + encodeURIComponent(no.acao.motivo || "");
+          var s = global.DB.sessao();
+          if (s && s.papel !== "paciente") {
+            UI.toast("O agendamento pelo portal é feito pelos pacientes.", "info");
+            return;
+          }
+          if (s) location.href = destino;
           else location.href = "acesso.html?destino=" + encodeURIComponent(destino);
         });
         corpo.lastChild.querySelector(".cris-bubble").appendChild(b);

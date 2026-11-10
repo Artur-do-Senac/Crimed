@@ -2,9 +2,9 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#208049" />
-    <title>Meu Painel · CRIMED</title>
+    <title>Início · CRIMED</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/layout.css" />
     <link rel="stylesheet" href="assets/css/pages.css" />
+    <link rel="stylesheet" href="assets/css/paciente.css" />
   </head>
 
   <body data-page="dashboard">
@@ -29,108 +30,71 @@
       <div class="app-main">
         <header data-shell="topbar"></header>
 
-        <main class="app-content" id="conteudo">
-          <div class="dash-grid">
-            <!-- ================================== PRÓXIMA CONSULTA -->
-            <section class="col-8">
-              <div class="card card-pad-lg" style="height: 100%">
-                <div class="card-head">
-                  <h3><i data-ico="calendar-check"></i> Sua próxima teleconsulta</h3>
-                  <button class="btn btn-primary btn-sm" data-act="agendar">
-                    <i data-ico="plus"></i> Agendar
-                  </button>
-                </div>
-                <div id="proxima-consulta"></div>
-              </div>
-            </section>
+        <main class="app-content pac-content" id="conteudo">
+          <!-- ======================================== SAUDAÇÃO + AGENDAR -->
+          <section class="pac-hero">
+            <h2 class="pac-saudacao" id="pac-saudacao">Olá!</h2>
+            <p class="pac-pergunta">Do que você precisa hoje?</p>
 
-            <!-- ======================================= AÇÕES RÁPIDAS -->
-            <section class="col-4">
-              <div class="card card-pad-lg" style="height: 100%">
-                <div class="card-head">
-                  <h3><i data-ico="zap"></i> Ações rápidas</h3>
-                </div>
-                <div class="stack" style="--gap: 0.55rem">
-                  <button class="btn btn-soft btn-block" data-act="agendar" style="justify-content: flex-start">
-                    <i data-ico="calendar-plus"></i> Nova teleconsulta
-                  </button>
-                  <a class="btn btn-outline btn-block" href="prontuarios.html#receitas" style="justify-content: flex-start">
-                    <i data-ico="pill"></i> Minhas receitas
-                  </a>
-                  <a class="btn btn-outline btn-block" href="prontuarios.html#exames" style="justify-content: flex-start">
-                    <i data-ico="flask"></i> Resultados de exames
-                  </a>
-                  <button class="btn btn-outline btn-block" data-act="abrir-cris" style="justify-content: flex-start">
-                    <i data-ico="message-dots"></i> Triagem com a Cris
-                  </button>
-                  <button class="btn btn-outline btn-block" data-act="avaliar" style="justify-content: flex-start">
-                    <i data-ico="star"></i> Avaliar atendimento
-                  </button>
-                </div>
-              </div>
-            </section>
+            <a class="cta-agendar" href="agendar.html">
+              <span class="cta-agendar-ico"><i data-ico="calendar-plus"></i></span>
+              <span class="cta-agendar-txt">
+                <strong>Agendar consulta</strong>
+                <small>Com clínico geral, por vídeo</small>
+              </span>
+              <i data-ico="chevron-right"></i>
+            </a>
+          </section>
 
-            <!-- ============================================ INDICADORES -->
-            <div class="col-12">
-              <div class="auto-grid" style="--min: 200px; --gap: 1.25rem" id="kpis-paciente"></div>
+          <!-- ============================================ PRÓXIMA CONSULTA -->
+          <section class="pac-bloco">
+            <div class="pac-bloco-head">
+              <h2 class="pac-h2">Sua próxima consulta</h2>
+              <span class="pac-contador" id="pac-qtd-consultas"></span>
             </div>
+            <div id="proxima-consulta"></div>
+          </section>
 
-            <!-- ============================================== HISTÓRICO -->
-            <section class="col-7">
-              <div class="card card-pad-lg" style="height: 100%">
-                <div class="card-head">
-                  <h3><i data-ico="history"></i> Atendimentos recentes</h3>
-                  <a href="consultas.html" class="btn btn-ghost btn-sm">
-                    Ver todos <i data-ico="arrow-right"></i>
-                  </a>
-                </div>
-                <div class="table-wrap">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Data</th>
-                        <th>Profissional</th>
-                        <th>Especialidade</th>
-                        <th>Situação</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody id="historico-tbody"></tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
+          <!-- =============================================== ATALHOS -->
+          <section class="pac-bloco">
+            <h2 class="pac-h2">Acesso rápido</h2>
+            <div class="pac-atalhos">
+              <a class="pac-atalho" href="consultas.html">
+                <span class="pac-atalho-ico bub-brand"><i data-ico="calendar"></i></span>
+                <strong>Minhas consultas</strong>
+              </a>
+              <a class="pac-atalho" href="prontuarios.html#exames">
+                <span class="pac-atalho-ico bub-accent"><i data-ico="flask"></i></span>
+                <strong>Resultados de exames</strong>
+              </a>
+              <a class="pac-atalho" href="prontuarios.html#receitas">
+                <span class="pac-atalho-ico bub-warn"><i data-ico="pill"></i></span>
+                <strong>Minhas receitas</strong>
+              </a>
+              <button class="pac-atalho" data-act="abrir-cris">
+                <span class="pac-atalho-ico bub-brand"><i data-ico="message-dots"></i></span>
+                <strong>Não sei o que tenho</strong>
+              </button>
+            </div>
+          </section>
 
-            <!-- ============================================ LADO DIREITO -->
-            <section class="col-5">
-              <div class="stack" style="--gap: 1.25rem">
-                <div class="card card-pad-lg">
-                  <div class="card-head">
-                    <h3><i data-ico="activity"></i> Sua jornada de saúde</h3>
-                  </div>
-                  <div id="jornada-saude"></div>
-                </div>
+          <!-- ================================================= COMO FUNCIONA -->
+          <section class="pac-bloco">
+            <div class="aviso aviso-info">
+              <i data-ico="info"></i>
+              <span>
+                <strong>Como funciona:</strong> você marca a consulta com o
+                <strong>clínico geral</strong>. Se precisar de especialista
+                (cardiologista, dermatologista etc.), o próprio médico faz o
+                encaminhamento e a consulta aparece em “Minhas consultas”.
+              </span>
+            </div>
+          </section>
 
-                <div class="card card-pad-lg card-brand">
-                  <div class="row" style="align-items: flex-start">
-                    <div class="icon-bubble" style="background: rgba(255, 255, 255, 0.16); color: #fff">
-                      <i data-ico="sparkles"></i>
-                    </div>
-                    <div>
-                      <h4>Campanha de vacinação</h4>
-                      <p class="small muted mt-1">
-                        A vacina contra Influenza está disponível em todas as 46
-                        UBS de Criciúma até o fim do mês, sem agendamento.
-                      </p>
-                      <button class="btn btn-white btn-sm mt-3" data-act="campanha">
-                        <i data-ico="map-pin"></i> Ver unidades
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
+          <a class="pac-sos" href="tel:192">
+            <i data-ico="phone"></i>
+            <span><strong>Emergência?</strong> Não espere a consulta: ligue 192 (SAMU)</span>
+          </a>
         </main>
       </div>
     </div>
@@ -141,7 +105,6 @@
     <script src="assets/js/icons.js"></script>
     <script src="assets/js/data.js"></script>
     <script src="assets/js/core.js"></script>
-    <script src="assets/js/charts.js"></script>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/paciente.js"></script>
     <script src="assets/js/assistente.js"></script>

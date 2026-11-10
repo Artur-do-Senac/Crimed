@@ -50,6 +50,7 @@
     renderFila();
     renderProdutividade();
     renderPendencias();
+    renderEncaminhamentos();
 
     /* ------------------------------------------------------------- KPIs */
     function renderKpis() {
@@ -102,12 +103,22 @@
         { hora: "13:30", paciente: "Rosane Milanez", motivo: "Retorno — diabetes tipo 2", status: "Confirmada" },
         { hora: "15:00", paciente: "Antônio Zanette", motivo: "Dor lombar persistente", status: "Confirmada" },
         { hora: "15:40", paciente: "Cleusa Fernandes", motivo: "Primeira consulta — rede", status: "Confirmada" },
-      ];
+      ].map(function (x) {
+        /* pacientes fictícios ganham um id próprio (não se misturam com contas reais) */
+        x.pacienteId = "ext-" + x.paciente.toLowerCase().replace(/[^a-z]+/g, "-");
+        return x;
+      });
+
+      /* só as consultas do próprio profissional (o gestor vê todas) */
+      reais = reais.filter(function (c) {
+        return ehAdmin || c.medicoId === sessao.id;
+      });
 
       var lista = reais
         .map(function (c) {
+          var pac = global.DB.pacienteDaConsulta(c);
           return {
-            hora: c.hora, paciente: c.paciente || global.DB.perfil().nome,
+            hora: c.hora, paciente: pac.nome, pacienteId: pac.id,
             motivo: c.motivo, status: c.status, id: c.id, destaque: true,
           };
         })
@@ -132,7 +143,13 @@
               ? '<button class="btn btn-primary btn-sm" data-atender="' + (a.id || "") + '">' +
                 Icon.svg("video") + "Atender</button>"
               : '<span class="badge badge-realizada">' + Icon.svg("check-circle") + "Atendido</span>") +
-            '<button class="btn btn-ghost btn-sm" data-ver="' + U.esc(a.paciente) + '" data-tip="Ver prontuário">' +
+            (ehAdmin
+              ? ""
+              : '<button class="btn btn-outline btn-sm" data-encaminhar="' + U.esc(a.pacienteId) + '" data-nome="' +
+                U.esc(a.paciente) + '" data-tip="Encaminhar para especialista">' +
+                Icon.svg("arrow-up-right") + '<span class="hide-mobile">Encaminhar</span></button>') +
+            '<button class="btn btn-ghost btn-sm" data-ver="' + U.esc(a.pacienteId) + '" data-nome="' + U.esc(a.paciente) +
+            '" data-tip="Ver prontuário" aria-label="Ver prontuário">' +
             Icon.svg("file-medical") + "</button>" +
             "</div></div>"
           );
@@ -142,11 +159,22 @@
       U.qsa("[data-atender]", host).forEach(function (b) {
         b.addEventListener("click", function () {
           var id = b.getAttribute("data-atender");
-          location.href = "teleconsulta.html?papel=medico" + (id ? "&consulta=" + id : "");
+          location.href = "teleconsulta.html" + (id ? "?consulta=" + id : "");
         });
       });
       U.qsa("[data-ver]", host).forEach(function (b) {
-        b.addEventListener("click", function () { abrirPaciente(b.getAttribute("data-ver")); });
+        b.addEventListener("click", function () {
+          abrirPaciente(b.getAttribute("data-ver"), b.getAttribute("data-nome"));
+        });
+      });
+      U.qsa("[data-encaminhar]", host).forEach(function (b) {
+        b.addEventListener("click", function () {
+          global.App.abrirEncaminhamento({
+            pacienteId: b.getAttribute("data-encaminhar"),
+            paciente: b.getAttribute("data-nome"),
+            onDone: renderEncaminhamentos,
+          });
+        });
       });
     }
 
@@ -196,7 +224,7 @@
           UI.toast("Chamando " + f.paciente + " para a sala virtual…", "info");
           setTimeout(function () {
             location.href =
-              "teleconsulta.html?papel=medico" + (f.consultaId ? "&consulta=" + f.consultaId : "");
+              "teleconsulta.html" + (f.consultaId ? "?consulta=" + f.consultaId : "");
           }, 1100);
         });
       });
@@ -245,17 +273,53 @@
       });
     }
 
+    /* -------------------------------------------- encaminhamentos feitos */
+    function renderEncaminhamentos() {
+      var host = document.getElementById("encaminhamentos");
+      if (!host) return;
+      var lista = global.DB.consultas()
+        .filter(function (c) {
+          return c.encaminhadoPor && (ehAdmin || c.encaminhadoPorId === sessao.id);
+        })
+        .sort(function (a, b) { return (b.data + b.hora).localeCompare(a.data + a.hora); })
+        .slice(0, 8);
+      if (!lista.length) {
+        host.innerHTML =
+          '<p class="small muted">Nenhum encaminhamento ainda. Use o botão <strong>Encaminhar</strong> ' +
+          "na agenda ou dentro da sala de atendimento.</p>";
+        return;
+      }
+      host.innerHTML = lista
+        .map(function (c) {
+          var pac = global.DB.pacienteDaConsulta(c);
+          var cls = c.status === "Cancelada" ? "badge-cancelada" : c.status === "Realizada" ? "badge-realizada" : "badge-confirmada";
+          return (
+            '<div class="exame-item">' +
+            '<div class="icon-bubble icon-bubble-sm bub-accent">' + Icon.svg("arrow-up-right") + "</div>" +
+            '<div style="flex:1;min-width:170px"><strong class="small">' + U.esc(pac.nome) + " → " +
+            U.esc(c.especialidade) + "</strong>" +
+            '<p class="tiny mute-2">' + U.esc(c.medico) + " · " + U.fmtData(c.data) + " às " + U.esc(c.hora) +
+            (c.prioridade && c.prioridade !== "Normal" ? " · <b>" + U.esc(c.prioridade) + "</b>" : "") + "</p></div>" +
+            '<span class="badge ' + cls + '">' + U.esc(c.status === "Confirmada" ? "Marcada" : c.status) + "</span></div>"
+          );
+        })
+        .join("");
+    }
+
     /* ------------------------------------------------ prontuário rápido */
-    function abrirPaciente(nome) {
-      var p = global.DB.perfil();
-      var ehTitular = nome === p.nome;
+    function abrirPaciente(pacienteId, nome) {
+      var conta = global.DB.usuario(pacienteId);
+      var p = conta || { nome: nome };
+      var ehTitular = !!conta;
       document.getElementById("pac-nome").textContent = nome;
       document.getElementById("pac-sub").textContent = ehTitular
         ? "Prontuário completo disponível na rede municipal"
         : "Paciente da rede municipal · dados de demonstração";
 
       var consultas = ehTitular
-        ? global.DB.consultas().filter(function (c) { return c.status === "Realizada"; })
+        ? global.DB.consultas().filter(function (c) {
+            return c.status === "Realizada" && (c.pacienteId || global.DB.pacienteDemo) === pacienteId;
+          })
         : [];
 
       document.getElementById("pac-corpo").innerHTML =
@@ -280,7 +344,7 @@
           : '<p class="small muted">Sem histórico clínico registrado no protótipo.</p>');
 
       document.getElementById("pac-atender").onclick = function () {
-        location.href = "teleconsulta.html?papel=medico";
+        location.href = "teleconsulta.html";
       };
       UI.modal.open("modal-paciente");
     }

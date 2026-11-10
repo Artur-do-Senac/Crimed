@@ -516,8 +516,15 @@
   width: 1.1rem;
   height: 1.1rem;
 }
-.input-icon input {
-  padding-left: 2.6rem;
+/* Seletor reforçado: ".field input:not(...):not(...)" tem especificidade maior
+   e zerava este recuo, deixando o texto digitado por cima do ícone. */
+.input-icon > input,
+.field .input-icon > input:not([type="checkbox"]):not([type="radio"]) {
+  padding-left: 2.75rem;
+}
+.input-icon:has(.toggle-pass) > input,
+.field .input-icon:has(.toggle-pass) > input:not([type="checkbox"]):not([type="radio"]) {
+  padding-right: 3rem;
 }
 .input-icon:focus-within > .ico {
   color: var(--brand);
@@ -1391,4 +1398,13 @@ body.modal-open {
 .fab:hover .fab-label {
   opacity: 1;
   transform: none;
+}
+
+/* no celular, selos longos quebram linha em vez de vazar da tela */
+@media (max-width: 520px) {
+  .badge {
+    white-space: normal;
+    max-width: 100%;
+    line-height: 1.35;
+  }
 }
